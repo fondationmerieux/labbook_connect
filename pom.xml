@@ -6,7 +6,7 @@
     <groupId>labbook_connect</groupId>
     <artifactId>labbook_connect</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>labbook_connect</name>
 
     <build>
@@ -71,7 +71,12 @@
 		<!-- HAPI -->
 		<dependency>
    			<groupId>ca.uhn.hapi</groupId>
-   			<artifactId>hapi-hl7overhttp</artifactId>
+   			<artifactId>hapi-base</artifactId>
+   			<version>2.5.1</version>
+		</dependency>
+		<dependency>
+   			<groupId>ca.uhn.hapi</groupId>
+   			<artifactId>hapi-structures-v251</artifactId>
    			<version>2.5.1</version>
 		</dependency>
 		
@@ -86,6 +91,14 @@
     		<artifactId>jakarta.activation-api</artifactId>
     		<version>2.1.2</version>
 		</dependency>
+		
+		<!-- TOML -->
+		<dependency>
+    	    <groupId>com.moandjiezana.toml</groupId>
+    		<artifactId>toml4j</artifactId>
+    		<version>0.7.2</version>
+		</dependency>
+
 		
 		<!-- log library -->
 		<dependency>
