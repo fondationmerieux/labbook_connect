@@ -1,0 +1,20 @@
+@startuml
+
+Title Query for AWOS [LAB-27]
+
+Participant "Analyzer Manager" as mgr
+Participant Bridge as bri
+Participant Analyzer as ana
+
+ana->ana : Specimen recognized
+ana->bri : Send query
+bri->bri : Convert analyzer format to QBP^Q11
+bri->mgr : POST with payload QBP^Q11
+note left : Query for AWOS
+
+mgr-->bri : 200 OK with payload RSP^K11
+note left : Acknowledgment of Query
+bri-->bri : Convert RSP^K11 to analyzer format
+bri-->ana : Send ACK to analyzer
+
+@enduml

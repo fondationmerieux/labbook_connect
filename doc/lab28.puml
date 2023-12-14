@@ -1,0 +1,33 @@
+@startuml
+
+Title AWOS Broadcast [LAB-28]
+
+Participant "Analyzer Manager" as mgr
+Participant Bridge as bri
+Participant Analyzer as ana
+
+mgr->bri : POST New Order with payload OML^O33
+note right : ORC-1=NW
+
+bri->bri : Convert OML^O33 to analyzer format
+bri->ana : Send new order to analyzer
+
+ana->bri : Receive new order response from analyzer
+bri->bri : Convert analyzer format to ORL^O34
+
+bri-->mgr : 200 OK with payload ORL^O34
+note left : Order Accepted (ORC-1=OK)\nUnable to Accept (ORC-1=UA)
+
+mgr->bri : POST Order Cancel with payload OML^O33
+note right : ORC-1=CA
+
+bri->bri : Convert OML^O33 to analyzer format
+bri->ana : Send cancel order to analyzer
+
+ana->bri : Receive cancel order response from analyzer
+bri->bri : Convert analyzer format to ORL^O34
+
+bri-->mgr : 200 OK with payload ORL^O34
+note left : Order Cancelled (ORC-1=CR)\nUnable to Cancel (ORC-1=UC)
+
+@enduml

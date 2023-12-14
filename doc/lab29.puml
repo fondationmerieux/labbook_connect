@@ -1,0 +1,19 @@
+@startuml
+
+Title AWOS Status Change [LAB-29]
+
+Participant "Analyzer Manager" as mgr
+Participant Bridge as bri
+Participant Analyzer as ana
+
+ana->bri : Send status change or result
+bri->bri : Convert analyzer format to OUL^R22
+bri->mgr : POST with payload OUL^R22
+note left : Test Result
+
+mgr-->bri : 200 OK with payload ACK^R22
+note left : Result Accepted
+bri-->bri : Convert ACK^R22 to analyzer format
+bri-->ana : Send ACK to analyzer
+
+@enduml

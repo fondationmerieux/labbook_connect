@@ -47,7 +47,7 @@ help:
 	@echo '  make devclean      remove image $(FULL_IMAGE_NAME):latest'
 	@echo '  make devrun        run the application access from http://localhost:$(DEVRUN_HTTP)$(DEFAULT_URL_PREFIX)'
 	@echo '  make devstop       stop the application'
-	@echo '  make devreload     stop, clean, build and run
+	@echo '  make devreload     stop, clean, build and run'
 
 .PHONY: devbuild
 devbuild:
@@ -67,14 +67,6 @@ devrun:
 .PHONY: devstop
 devstop:
 	$(DOCKER_COMMAND) stop $(CONTAINER_NAME)
-	
+
 .PHONY: devreload
-devreload:
-	$(DOCKER_COMMAND) stop $(CONTAINER_NAME)
-	$(DOCKER_COMMAND) rmi $(FULL_IMAGE_NAME):latest
-	$(DOCKER_COMMAND) build . -t $(FULL_IMAGE_NAME):latest
-	mkdir -p $(DEVRUN_LOG_DIR)
-	mkdir -p $(DEVRUN_STORAGE)
-	rsync -a ./storage/ $(DEVRUN_STORAGE)
-	$(DOCKER_COMMAND) run $(DEVRUN_GENERAL_OPTIONS) $(DEVRUN_ENV_OPTIONS) $(DEVRUN_VOLUME_OPTIONS) $(FULL_IMAGE_NAME):latest
-	
+devreload: devstop devclean devbuid devrun
