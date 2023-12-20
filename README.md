@@ -63,15 +63,55 @@ Usage:
 
 ## HTTP API
 
-TODO
+You can browse the Java documentation by executing the index.html file available in doc/api/
 
 ## Plugin API
 
-TODO
+The plugin structure must implement the interface described in the Analyzer.java file.
+The plugin can use the functions provided in the Connect_util.java file.
 
 # Development environment
 
-TODO
+The Eclipse 4.29.0 (2023-09) plugin and openjdk 21 were used for this project.
+View doc/dependencies.md file
+
+# Test
+
+Installer le conteneur LabBook Connect
+Les arborescences suivantes doivent être accessibles : 
+/storage/resource/connect/analyzer/plugin/
+/storage/resource/connect/analyzer/setting/
+Dans plugin copier le fichier AnalyzerDemo.jar
+Dans setting copier un fichier de setting suivant cette structure TOML :
+
+version = "1.0"
+
+[analyzer]
+brand = ""
+name = ""
+id = "id_analyzer_demo"  # Must not be empty
+plugin= "AnalyzerDemo"   # Do not modify
+lab27 = "http://server:8080/connect/test_lab27"
+lab28 = "http://server:8080/connect/lab28"
+lab29 = "http://server:8080/connect/test_lab29"
+mapping = ""
+
+Executer la conteneur avec make devrun
+
+Evoquer le chemin fichier de log !
+
+Structure fichier TOML de test pour lab27 et lab29 :
+[message]
+  control_id  = "id_of_control"
+
+Pour tester lab27 il faut déposer un fichier TOML dans /storage/resource/connect/analyzer/id_analyzer_demo/lab27 (répertoire créer au lancment de Connect si le fichier de setting et plugin sont bien présent et conforme.
+Si le test de lecture du fichier est correct ce dernier se déplacer dans /storage/resource/connect/analyzer/id_analyzer_demo/archive_lab27
+
+Pour tester lab28, vous pouvez executer le curl suivant :
+curl -v -X POST "http://server:8080/connect/lab28/id_analyzer_demo" -H "Content-Type: application/hl7-v2" -d "MSH|^~\\&|ULTRA|TML|OLIS|OLIS|202312201130||OML^O33|123456|T|2.5.1"
+
+Pour tester lab29 il faut déposer un fichier TOML dans /storage/resource/connect/analyzer/id_analyzer_demo/lab29 (répertoire créer au lancment de Connect si le fichier de setting et plugin sont bien présent et conforme.
+Si le test de lecture du fichier est correct ce dernier se déplacer dans /storage/resource/connect/analyzer/id_analyzer_demo/archive_lab29
 
 # Changes
 

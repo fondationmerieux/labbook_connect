@@ -1,8 +1,5 @@
 package labbook_connect.labbook_connect;
 
-import org.slf4j.Logger;
-
-import org.slf4j.LoggerFactory;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -15,6 +12,7 @@ import jakarta.ws.rs.core.Response;
 import plugin.Analyzer;
 
 /**
+ * Class of access points 
  * Root resource (exposed at "connect" path)
  */
 @Path("/connect")
@@ -24,21 +22,29 @@ public class MyResource {
 
     public static final MediaType APPLICATION_HL7_V2_TYPE = new MediaType("application", "hl7-v2");
 	
-	private static Logger logger = LoggerFactory.getLogger(MyResource.class);
-
+    /**
+     * Access point to test 
+     * 
+     * @return version of this App
+     */
     @GET
     @Path("test")
     @Produces(MediaType.TEXT_PLAIN)
     public String test() {
-    	logger.info("WS test");
+    	System.out.println("WS test");
         return App.VERSION;
     }
     
+    /**
+     * Access point to refresh loading analyzers.
+     * 
+     * @return count of analyzers loaded
+     */
     @GET
     @Path("load_analyzers")
     @Produces(MediaType.TEXT_PLAIN)
     public int load_analyzers() {
-    	logger.info("WS load_analyzers");
+    	System.out.println("WS load_analyzers");
     	
     	int nb_analyzers_loaded = 0;
     	
@@ -49,11 +55,16 @@ public class MyResource {
         return nb_analyzers_loaded;
     }
     
+    /**
+     * Access point to list of possible analyzers.
+     * 
+     * @return plugin name for each possible analyzers
+     */
     @GET
     @Path("list_analyzers_classes")
     @Produces(MediaType.TEXT_PLAIN)
     public String list_analyzers_classes() {
-    	logger.info("WS list_analyzers_classes");
+    	System.out.println("WS list_analyzers_classes");
     	
     	String ret = "";
     	
@@ -61,16 +72,21 @@ public class MyResource {
     		ret += analyzer.test() + "\n" ;    		
     	}
     	
-    	logger.debug("list_analyzers_classes = " + ret);
+    	System.out.println("list_analyzers_classes = " + ret);
     	
         return ret;
     }
     
+    /**
+     * Access point to list of loaded analyzers.
+     * 
+     * @return plugin name for each loaded analyzers.
+     */
     @GET
     @Path("list_analyzers_loaded")
     @Produces(MediaType.TEXT_PLAIN)
     public String list_analyzers_loaded() {
-    	logger.info("WS list_analyzers_loaded");
+    	System.out.println("WS list_analyzers_loaded");
     	
     	String ret = "";
     	
@@ -78,56 +94,70 @@ public class MyResource {
     		ret += analyzer.test() + "\n" ;    		
     	}
     	
-    	logger.debug("list_analyzers_loaded = " + ret);
+    	System.out.println("list_analyzers_loaded = " + ret);
     	
         return ret;
-    }
+    }  
     
-    @POST
-    @Path("lab27")
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response lab27(@PathParam("id_analyzer") String id_analyzer, String msg_from_analyzer) {
-    	logger.debug("DEBUG WS lab27 id_analyzer=" + id_analyzer + ", msg_from_analyzer : " + msg_from_analyzer);
-    	
-    	String ret = "";
-    	
-    	logger.debug("DEBUG WS lab27 before return");
-    	
-        return Response.ok(ret).build();
-    }    
-    
+    /**
+     * Access point to list of loaded analyzers.
+     * 
+     * @param id_analyzer value of id_analyzer targeted
+     * @param oml_o33 HL7 string
+     * @return plugin name for each loaded analyzers.
+     */
 	@POST
-    @Path("lab28")
+    @Path("lab28/{id_analyzer}")
     @Consumes(APPLICATION_HL7_V2)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response lab28(@PathParam("id_analyzer") String id_analyzer, String hl7_msg) {
-    	logger.debug("DEBUG WS lab28 id_analyzer=" + id_analyzer + ", hl7_msg : " + hl7_msg);
+    public Response lab28(@PathParam("id_analyzer") String id_analyzer, String oml_o33) {
+    	System.out.println("DEBUG WS lab28 id_analyzer=" + id_analyzer + ", oml_o33 : " + oml_o33);
     	
-    	String ret = "";
+    	String orl_o34 = "";
     	
     	// give message to plugin
     	for (Analyzer analyzer : App.analyzers_loaded) {
-    		if (id_analyzer == analyzer.getId_analyzer())
+    		System.out.println("DEBUG analyzer.getId_analyzer() = " + analyzer.getId_analyzer());
+    		if (id_analyzer.equals(analyzer.getId_analyzer()))
     		{
-    		ret += analyzer.lab28(hl7_msg) ;
+    		orl_o34 = analyzer.lab28(oml_o33) ;
     		}
     	}
     	
-    	logger.debug("DEBUG WS lab28 before return");
+    	System.out.println("DEBUG WS lab28 orl_o34 : " + orl_o34);
     	
-        return Response.ok(ret).build();
+        return Response.ok(orl_o34).build();
     }
 	
+	/**
+     * Access point to simulate upstream for lab27.
+     * 
+     * @param qbp_q11 HL7 string
+     * @return Response ok with hl7 message in payload.
+     */
 	@POST
-    @Path("lab29")
+    @Path("test_lab27")
+    @Consumes(APPLICATION_HL7_V2)
     @Produces(MediaType.TEXT_PLAIN)
-    public Response lab29(@PathParam("id_analyzer") String id_analyzer, String msg_from_analyzer) {
-    	logger.debug("DEBUG WS lab29 id_analyzer=" + id_analyzer + ", msg_from_analyzer : " + msg_from_analyzer);
+    public Response test_lab27(String qbp_q11) {
+    	System.out.println("DEBUG WS test_lab27 qbp_q11 : " + qbp_q11);
     	
-    	String ret = "";
+    	return Response.ok(qbp_q11).build();
+    }
+	
+	/**
+     * Access point to simulate upstream for lab29.
+     * 
+     * @param oul_r22 HL7 string
+     * @return Response ok with hl7 message in payload.
+     */
+	@POST
+    @Path("test_lab29")
+    @Consumes(APPLICATION_HL7_V2)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response test_lab29(String oul_r22) {
+    	System.out.println("DEBUG WS test_lab29 oul_r22 : " + oul_r22);
     	
-    	logger.debug("DEBUG WS lab29 before return");
-    	
-        return Response.ok(ret).build();
+    	return Response.ok(oul_r22).build();
     }
 }

@@ -8,10 +8,11 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Set;
 
 import com.moandjiezana.toml.Toml;
 
@@ -19,23 +20,18 @@ import plugin.Analyzer;
 
 public class AnalyzerLoader {
 
-	private static Logger logger = LoggerFactory.getLogger(AnalyzerLoader.class);
-	
 	private List<Analyzer> analyzers = new ArrayList<Analyzer>();
 
 	public List<Analyzer> loadAnalyzerClasses() {
-		logger.debug("DEBUG loadAnalyzer()");
+		System.out.println("DEBUG loadAnalyzer()");
 
-		// Spécifiez le chemin du répertoire que vous souhaitez lister
 		String directoryPath = "/storage/resource/connect/analyzer/plugin";
 
-		// Utilisez l'API Path pour représenter le chemin du répertoire
 		Path directory = Paths.get(directoryPath);
 
 		try {
-			// Parcourez les fichiers avec Files.walk()
 			Files.walk(directory)
-			.filter(Files::isRegularFile)  // Filtrez pour obtenir uniquement les fichiers (pas les répertoires)
+			.filter(Files::isRegularFile)
 			.forEach(file -> loadPlugin(file));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -49,10 +45,9 @@ public class AnalyzerLoader {
 	{
 		Path plugin_name = file.getFileName();
 		
-		// Spécifiez le chemin du répertoire contenant les fichiers .class
 		URL url = null ;
 		try {
-			logger.debug("DEBUG Init URL");
+			System.out.println("DEBUG Init URL");
 			url = new URL("file:/storage/resource/connect/analyzer/plugin/" + plugin_name);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -61,37 +56,35 @@ public class AnalyzerLoader {
 		String plugin_class = plugin_name.toString();
 		plugin_class = plugin_class.replace(".jar", "");
 
-		// Créez un URLClassLoader avec le chemin spécifié
 		try (URLClassLoader classLoader = new URLClassLoader(new URL[]{url})) {
-			logger.debug("DEBUG Init classLoader url=" + url);
-			// Spécifiez le nom complet de la classe (y compris le package)
+			System.out.println("DEBUG Init classLoader url=" + url);
+			// Specify full class name (including package)
 			String className = "";
 
 			className = "plugin." + plugin_class;
 
 			try {
-				logger.debug("DEBUG className : " + className);
-				// Chargez la classe
+				System.out.println("DEBUG className : " + className);
+				// load class
 				Class<?> loadedClass = classLoader.loadClass(className);
 
-				logger.debug("DEBUG Loaded className : " + className);
+				System.out.println("DEBUG Loaded className : " + className);
 
-				// Instanciez la classe
+				// instance of class
 				Object instance = loadedClass.getDeclaredConstructor().newInstance();
 
-				logger.debug("DEBUG instance created of : " + instance.getClass().getSimpleName());
+				System.out.println("DEBUG instance created of : " + instance.getClass().getSimpleName());
 
 				if (plugin.Analyzer.class.isAssignableFrom(loadedClass)) {
-					logger.debug("DEBUG " + className + " implémente l'interface Analyzer.");
+					System.out.println("DEBUG " + className + " implements the Analyzer interface.");
 				} else {
-					logger.debug("DEBUG " + className + " n'implémente pas l'interface Analyzer.");
+					System.out.println("DEBUG " + className + " does not implement the Analyzer interface.");
 				}
 
-				// Utilisez la classe comme nécessaire
 				if (instance instanceof plugin.Analyzer) {
-					logger.debug("DEBUG Is instance of Analyzer");
+					System.out.println("DEBUG Is instance of Analyzer");
 					Analyzer analyzer = (Analyzer) instance;
-					logger.debug("DEBUG Try method test() = " + analyzer.test());
+					System.out.println("DEBUG Try method test() = " + analyzer.test());
 
 					analyzers.add((Analyzer) instance);
 				}
@@ -99,10 +92,10 @@ public class AnalyzerLoader {
 					IllegalAccessException | IllegalArgumentException |
 					InvocationTargetException | NoSuchMethodException |
 					SecurityException e) {
-				logger.error("Error loading class " + className + ": " + e.getMessage());
+				System.out.println("ERROR loading class " + className + ": " + e.getMessage());
 			}
 		} catch (IOException e) {
-			logger.debug("DEBUG ERROR e :" + e);
+			System.out.println("DEBUG ERROR e :" + e);
 		}
 	}
 	
@@ -116,15 +109,15 @@ public class AnalyzerLoader {
 
     		if ( !App.analyzers_classes.isEmpty() )
     		{
-    			logger.info("analyzers is not empty");
+    			System.out.println("DEBUG analyzers_classes is not empty");
     			for (Analyzer analyzer : App.analyzers_classes) {
-    				logger.debug("DEBUG analyzer.test() = " + analyzer.test());
+    				System.out.println("DEBUG analyzer.test() = " + analyzer.test());
     			}
     		}
     		else
-    			logger.info("analyzers is empty");
+    			System.out.println("analyzers_classes is empty");
     	} catch(Exception e) {
-    		logger.error("ERROR Load plugins :"+e.toString());
+    		System.out.println("ERROR Load plugins :"+e.toString());
     	}
 
     	// LOAD analyzers settings and set corresponding analyzers_loaded
@@ -137,7 +130,7 @@ public class AnalyzerLoader {
     		.filter(Files::isRegularFile)
     		.forEach(file -> parse_setting(file));
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		System.out.println("ERROR parse_setting :"+e.toString());
     	}
     	
     	int nb_analyzers_loaded = 0;
@@ -150,26 +143,120 @@ public class AnalyzerLoader {
 	
 	private static void parse_setting(Path file)
 	{
-		logger.debug("DEBUG parse setting file : " + file.getFileName());
+		System.out.println("DEBUG parse setting file : " + file.getFileName());
 		
 		Toml setting = new Toml().read(file.toFile());
 		
 		String id_analyzer = setting.getString("analyzer.id") ;
 		String plugin_name = setting.getString("analyzer.plugin") ;
+		String url_lab27   = setting.getString("analyzer.lab27") ;
+		String url_lab29   = setting.getString("analyzer.lab29") ;
 		
-		if (!id_analyzer.isEmpty() && !plugin_name.isEmpty())
+		System.out.println("DEBUG id_analyzer=" + id_analyzer + " plugin_name=" + plugin_name);
+		System.out.println("DEBUG url_lis_lab27 = " + url_lab27);
+		System.out.println("DEBUG url_lis_lab29 = " + url_lab29);
+		
+		if (!id_analyzer.isEmpty() && !plugin_name.isEmpty() && !url_lab29.isEmpty())
 		{
+			System.out.println("DEBUG id_analyzer, plugin_name and url_lab29 are not empty");
+			
 			for (Analyzer analyzer : App.analyzers_classes) {
-				if ( analyzer.test() == plugin_name)
+				System.out.println("DEBUG analyzer.test()=" + analyzer.test());
+				System.out.println("DEBUG plugin_name=" + plugin_name);
+				
+				if ( analyzer.test().equals(plugin_name))
 				{
+					try {
+					System.out.println("DEBUG test() == plugin_name");
+					
+					// Create directories for this analyzer
+					Path dir_analyzer  = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer);
+					Path dir_mapping   = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer + "/mapping");
+					Path dir_lab27     = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer + "/lab27");
+					Path dir_lab29     = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer + "/lab29");
+					Path dir_archive27 = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer + "/archive_lab27");
+					Path dir_archive29 = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer + "/archive_lab29");
+					
+					Set<PosixFilePermission> permissions = new HashSet<>();
+	                permissions.add(PosixFilePermission.OWNER_READ);
+	                permissions.add(PosixFilePermission.OWNER_WRITE);
+	                permissions.add(PosixFilePermission.OWNER_EXECUTE);
+	                permissions.add(PosixFilePermission.GROUP_READ);
+	                permissions.add(PosixFilePermission.GROUP_WRITE);
+	                permissions.add(PosixFilePermission.GROUP_EXECUTE);
+	                permissions.add(PosixFilePermission.OTHERS_READ);
+	                permissions.add(PosixFilePermission.OTHERS_WRITE);
+	                permissions.add(PosixFilePermission.OTHERS_EXECUTE);
+
+					if (!Files.exists(dir_analyzer)) {
+		                Files.createDirectories(dir_analyzer);
+		                System.out.println("DEBUG directory created : " + dir_analyzer);
+		                Files.setPosixFilePermissions(dir_analyzer, permissions);
+		                
+		                if (!Files.exists(dir_mapping)) {
+			                Files.createDirectories(dir_mapping);
+			                System.out.println("DEBUG directory created : " + dir_mapping);
+			                Files.setPosixFilePermissions(dir_mapping, permissions);			                
+		                }
+		                
+		                if (!Files.exists(dir_lab27)) {
+			                Files.createDirectories(dir_lab27);
+			                System.out.println("DEBUG directory created : " + dir_lab27);
+			                Files.setPosixFilePermissions(dir_lab27, permissions);
+		                }
+		                
+		                if (!Files.exists(dir_lab29)) {
+			                Files.createDirectories(dir_lab29);
+			                System.out.println("DEBUG directory created : " + dir_lab29);
+			                Files.setPosixFilePermissions(dir_lab29, permissions);
+		                }
+		                
+		                if (!Files.exists(dir_archive27)) {
+			                Files.createDirectories(dir_archive27);
+			                System.out.println("DEBUG directory created : " + dir_archive27);
+			                Files.setPosixFilePermissions(dir_archive27, permissions);
+		                }
+		                
+		                if (!Files.exists(dir_archive29)) {
+			                Files.createDirectories(dir_archive29);
+			                System.out.println("DEBUG directory created : " + dir_archive29);
+			                Files.setPosixFilePermissions(dir_archive29, permissions);
+		                }
+		                
+		            } else {
+		                System.out.println("DEBUG directory already exists : " + dir_analyzer);
+		            }
+					
 					Analyzer newAnalyzer = analyzer.copy();
 					
+					System.out.println("DEBUG newAnalyzer created");
+					
 					newAnalyzer.setId_analyzer(id_analyzer);
+					newAnalyzer.setUrl_upstream_lab27(url_lab27);
+					newAnalyzer.setUrl_upstream_lab29(url_lab29);
 					
 					App.analyzers_loaded.add(newAnalyzer);
-					logger.debug("DEBUG " + newAnalyzer.test() + " with id=" + newAnalyzer.getId_analyzer() + " added to analyzers_loaded");
+					
+					// Not all analyzers make lab27
+					if (!url_lab27.isEmpty())
+					{
+					    Thread thread_lab27 = new Thread(() -> newAnalyzer.lab27());
+					    thread_lab27.start();
+					}
+					
+					Thread thread_lab29 = new Thread(() -> newAnalyzer.lab29());
+					thread_lab29.start();
+					
+					System.out.println("DEBUG " + newAnalyzer.test() + " with id=" + newAnalyzer.getId_analyzer() + " added to analyzers_loaded");
+					} catch (Exception e) {
+						System.out.println("ERROR copy and add newAnalyzer :"+e.toString());
+					}
 				}
 			}
 		}
+		else {
+			System.out.println("ERROR lack of settings" );
+		}
+			
 	}
 }
