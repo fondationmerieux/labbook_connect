@@ -12,6 +12,8 @@ Technically LabBook Connect v1 is an HTTP proxy to analyzers implementing the IH
 It exchanges HL7v2 messages over HTTP with upstream systems like LabBook on one side.
 On the other side, it delegates the handling of the HL7v2 messages to plugins, one plugin for each supported type of analyzer.
 The plugins are in charge of converting the HL7v2 messages to whatever dialect the analyzer speaks.
+Each plugin comes in the form of a java archive .jar file.
+On startup, LabBook Connect searchs for available plugins and runs them.
 
 For now, LabBook Connect doesn't implement any mapping.
 The codes in the HL7v2 messages must be those expected by the targeted analyzer.
@@ -61,57 +63,134 @@ Usage:
   make devreload     stop, clean, build and run
 ~~~
 
+## Source documentation
+
+You can browse the Java documentation by pointing to the `doc/api/index.html` file.
+
 ## HTTP API
 
-You can browse the Java documentation by executing the index.html file available in doc/api/
+LabBook Connect uses the
+[HAPI HL7 over HTTP specification](https://hapifhir.github.io/hapi-hl7v2/hapi-hl7overhttp/specification.html)
+to transport HL7v2 messages over HTTP.
+
+LabBook Connect uses HTTP to implement the 3 IHE-LAW transactions:
+
+### [LAB-27]
+
+LabBook Connect is the client, sends POST messages to an upstrean URL,
+
+![LAB-27 diagram image](doc/lab27.png)
+
+[LAB-27 diagram source code](doc/lab27.puml).
+
+### [LAB-28]
+
+LabBook Connect is the server, receives POST messages from upstrean,
+
+![LAB-28 diagram image](doc/lab28.png)
+
+[LAB-28 diagram source code](doc/lab28.puml).
+
+### [LAB-29]
+
+LabBook Connect is the client, sends POST messages to an upstrean URL,
+
+![LAB-29 diagram image](doc/lab29.png)
+
+[LAB-29 diagram source code](doc/lab29.puml).
 
 ## Plugin API
 
-The plugin structure must implement the interface described in the Analyzer.java file.
-The plugin can use the functions provided in the Connect_util.java file.
+The plugin must implement the interface described in the `src/main/java/plugin/Analyzer.java` file.
+Please see the comments in the file for details.
+
+The plugin can use the functions provided in the `src/main/java/plugin/Connect_util.java` file to communicate with LabBook Connect.
 
 # Development environment
 
 The Eclipse 4.29.0 (2023-09) plugin and openjdk 21 were used for this project.
-View doc/dependencies.md file
+Please see `doc/dependencies.md`.
 
-# Test
+# Configuration
 
-Installer le conteneur LabBook Connect
-Les arborescences suivantes doivent être accessibles : 
-/storage/resource/connect/analyzer/plugin/
-/storage/resource/connect/analyzer/setting/
-Dans plugin copier le fichier AnalyzerDemo.jar
-Dans setting copier un fichier de setting suivant cette structure TOML :
+LabBook Connect runs in a container.
+It expects a permanent volume to be accessible at `/storage/`.
+It writes logs into `/app/logs/`.
 
-version = "1.0"
+On startup LabBook Connect:
 
-[analyzer]
-brand = ""
-name = ""
-id = "id_analyzer_demo"  # Must not be empty
-plugin= "AnalyzerDemo"   # Do not modify
-lab27 = "http://server:8080/connect/test_lab27"
-lab28 = "http://server:8080/connect/lab28"
-lab29 = "http://server:8080/connect/test_lab29"
-mapping = ""
+- loads the plugins present in `/storage/resource/connect/analyzer/plugin/`,
+- reads the configuration files present in `/storage/resource/connect/analyzer/setting`,
+- creates a directory for each analyzer present in the configuration files.
+  The directory name is the plugin ID.
 
-Executer la conteneur avec make devrun
+A configuration file example with a demo analyzer in available in `storage/resource/connect/analyzer/setting/id_analyzer_demo.toml`.
 
-Evoquer le chemin fichier de log !
+# Test with the AnalyzerDemo plugin
 
-Structure fichier TOML de test pour lab27 et lab29 :
+The project contains a demo plugin with a basic configuration:
+
+- AnalyzerDemo plugin in `resource/connect/analyzer/plugin/AnalyzerDemo.jar`,
+- configuration file in `/storage/resource/connect/analyzer/setting/id_analyzer_demo.toml`,
+
+Start the container:
+
+`$ make devrun`
+
+Test it started:
+
+~~~
+$ curl http://localhost:8080/connect/test
+1.0.0
+~~~
+
+The container is started with volume maps for /storage and /app/logs.
+
+LabBook Connect uses the /storage volume to hold various files.
+The initial content of the volume is stored in the `./storage` directory of the source tree.
+In order to prevent modification of this directory it is replicated to a `DEVRUN_STORAGE` directory before mounting it into the container.
+`DEVRUN_STORAGE=./devrun_storage` by default, you can modify it by setting the `DEVRUN_STORAGE` environment variable.
+
+Similarly the directory for logs is defined by default `DEVRUN_LOG_DIR=./logs`
+You can modify it by setting the `DEVRUN_LOG_DIR` environment variable.
+
+## Test LAB-27
+
+The AnalyzerDemo plugin reads incoming queries in `/storage/resource/connect/analyzer/<ID>/lab27/`.
+The files must be in the TOML format and contain:
+
+~~~
 [message]
   control_id  = "id_of_control"
+~~~
 
-Pour tester lab27 il faut déposer un fichier TOML dans /storage/resource/connect/analyzer/id_analyzer_demo/lab27 (répertoire créer au lancment de Connect si le fichier de setting et plugin sont bien présent et conforme.
-Si le test de lecture du fichier est correct ce dernier se déplacer dans /storage/resource/connect/analyzer/id_analyzer_demo/archive_lab27
+An HTTP POST request is sent to the upstream lab27 endpoint defined in the configuration with a dummy HL7 OBP_Q11 message payload.
 
-Pour tester lab28, vous pouvez executer le curl suivant :
-curl -v -X POST "http://server:8080/connect/lab28/id_analyzer_demo" -H "Content-Type: application/hl7-v2" -d "MSH|^~\\&|ULTRA|TML|OLIS|OLIS|202312201130||OML^O33|123456|T|2.5.1"
+After that the file is moved to `/storage/resource/connect/analyzer/<ID>/archive_lab27/`.
 
-Pour tester lab29 il faut déposer un fichier TOML dans /storage/resource/connect/analyzer/id_analyzer_demo/lab29 (répertoire créer au lancment de Connect si le fichier de setting et plugin sont bien présent et conforme.
-Si le test de lecture du fichier est correct ce dernier se déplacer dans /storage/resource/connect/analyzer/id_analyzer_demo/archive_lab29
+## Test LAB-28
+
+You can send test OML_33 messages to the lab28 endpoint:
+
+~~~
+curl -v -X POST "http://server:8080/connect/lab28/id_analyzer_demo"\
+    -H "Content-Type: application/hl7-v2"\
+    -d "MSH|^~\\&|ULTRA|TML|OLIS|OLIS|202312201130||OML^O33|123456|T|2.5.1"
+~~~
+
+## Test LAB-29
+
+The AnalyzerDemo plugin reads incoming status changes in `/storage/resource/connect/analyzer/<ID>/lab29/`.
+The files must be in the TOML format and contain:
+
+~~~
+[message]
+  control_id  = "id_of_control"
+~~~
+
+An HTTP POST request is sent to the upstream lab29 endpoint defined in the configuration with a dummy HL7 OUL_R22 message payload.
+
+After that the file is moved to `/storage/resource/connect/analyzer/<ID>/archive_lab29/`.
 
 # Changes
 

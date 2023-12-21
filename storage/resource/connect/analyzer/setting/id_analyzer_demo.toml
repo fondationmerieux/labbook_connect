@@ -1,0 +1,11 @@
+version = "1.0"
+
+[analyzer]
+brand = ""
+name = ""
+id = "id_analyzer_demo"  # Must not be empty
+plugin= "AnalyzerDemo"   # Must match plugin name (without .jar extension). Do not modify
+lab27 = "http://server:8080/connect/test_lab27"
+lab28 = "http://server:8080/connect/lab28"
+lab29 = "http://server:8080/connect/test_lab29"
+mapping = ""
