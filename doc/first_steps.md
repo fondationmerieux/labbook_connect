@@ -26,8 +26,8 @@ In this context some unifying efforts seem relevant:
 dedicated to creating and encouraging adoption of a unified connectivity standard to reduce
 the cost and variability of data exchange between IVD devices and healthcare informatics in
 clinical laboratories.
-It promotes the use of the IHE-LAW profile to define the physical
-connection, message definitions, and workflow definitions between instruments,
+It promotes the use of the [IHE-LAW profile](https://wiki.ihe.net/index.php/Laboratory_Analytical_Workflow_Profile)
+to define the physical connection, message definitions, and workflow definitions between instruments,
 middleware, and LIS systems in the laboratory.
 It defines the LIVD digital format for publishing mappings between LOINC and vendor defined tests.
 - Decoupled Analyzer Interface System (DAIS platform) is a recent initiative of the
@@ -146,7 +146,7 @@ If so simple payloads may be converted to MIME structures to carry the HL7 and t
 An alternative is to log raw messages, and to implement IHE ATNA Profile transactions to
 centralize the logs in the future.
 
-## Is it possible to adapt any specific IVD device workflow to IHE- LAW ?
+## Is it possible to adapt any specific IVD device workflow to IHE-LAW ?
 
 The HTTP Bridge is based on the assumption that it is possible to adapt any specific IVD device to
 the synchronous workflow of IHE-LAW. In particular, when a response is needed from the device,

@@ -8,8 +8,10 @@ For now (as of this v1) it focuses on the exchanges with analyzers (In Vitro Dia
 
 A more detailed explanation of the first steps of the project and the choices that were made is available in [this document](doc/first_steps.md).
 
-Technically LabBook Connect v1 is an HTTP proxy to analyzers implementing the IHE-LAW transactions.
-It exchanges HL7v2 messages over HTTP with upstream systems like LabBook on one side.
+Technically LabBook Connect v1 is an HTTP proxy to analyzers implementing the transactions defined by the
+[IHE-LAW profile](https://wiki.ihe.net/index.php/Laboratory_Analytical_Workflow_Profile).
+It exchanges HL7v2 messages over HTTP with upstream systems like LabBook on one side
+(these upstream systems are called Analyzer Manager in the IHE-LAW profile).
 On the other side, it delegates the handling of the HL7v2 messages to plugins, one plugin for each supported type of analyzer.
 The plugins are in charge of converting the HL7v2 messages to whatever dialect the analyzer speaks.
 Each plugin comes in the form of a java archive .jar file.
@@ -28,7 +30,8 @@ For convenience, this repository contains a prebuilt version of LabBook Connect 
 a plugin (AnalyzerDemo) in binary form in `resource/connect/analyzer/plugin/AnalyzerDemo.jar`.
 This allows you to build a container without installing the development environment and building a plugin.
 
-For more information about plugins in general and the AnalyzerDemo plugin in particular please refer to the [AnalyzerDemo plugin repository](URL).
+For more information about plugins in general and the AnalyzerDemo plugin in particular please refer
+to the [AnalyzerDemo plugin repository](https://github.com/fondationmerieux/labbook_connect_plugin_demo).
 
 # Requirements
 
@@ -73,7 +76,8 @@ LabBook Connect uses the
 [HAPI HL7 over HTTP specification](https://hapifhir.github.io/hapi-hl7v2/hapi-hl7overhttp/specification.html)
 to transport HL7v2 messages over HTTP.
 
-LabBook Connect uses HTTP to implement the 3 IHE-LAW transactions:
+These HL7v2 messages carried as payload by HTTP requests and responses are those described
+in the 3 transactions that constitute the IHE-LAW profile: LAB-27, LAB-28 and LAB-29.
 
 ### [LAB-27]
 
@@ -102,9 +106,10 @@ LabBook Connect is the client, sends POST messages to an upstrean URL,
 ## Plugin API
 
 The plugin must implement the interface described in the `src/main/java/plugin/Analyzer.java` file.
-Please see the comments in the file for details.
+Please see the comments in the [file](src/main/java/plugin/Analyzer.java) for details.
 
-The plugin can use the functions provided in the `src/main/java/plugin/Connect_util.java` file to communicate with LabBook Connect.
+The plugin can use the functions provided in the `src/main/java/plugin/Connect_util.java`
+[file](src/main/java/plugin/Connect_util.java) to communicate with LabBook Connect.
 
 # Development environment
 
@@ -120,7 +125,7 @@ It writes logs into `/app/logs/`.
 On startup LabBook Connect:
 
 - loads the plugins present in `/storage/resource/connect/analyzer/plugin/`,
-- reads the configuration files present in `/storage/resource/connect/analyzer/setting`,
+- reads the configuration files present in `/storage/resource/connect/analyzer/setting/`,
 - creates a directory for each analyzer present in the configuration files.
   The directory name is the plugin ID.
 
