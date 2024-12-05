@@ -1,0 +1,10 @@
+LAB-27 operations with LabBook Connect
+
+AnalyzerXXX	- Listen device
+		- Receive specific message
+		- If the message concerns a LAB-27 transaction [TODO]
+		- convert message to QBP^Q11 HL7 message [TODO]
+		- send QBP^Q11 to LIS
+		- receive return RSP^K11 HL7 message
+		- Convert RSP^K11 to specific to this type of analyzer [TODO]
+		- Send ACK with converted message to device

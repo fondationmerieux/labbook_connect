@@ -1,0 +1,12 @@
+LAB-28 operations with LabBook Connect
+
+		- LIS send by http request OML^O33 HL7 message to LBK Connect server
+MyResource 	- Connect receive on url_server/lab28/id_analyzer
+	    	- Transmits to the analyzer instance concerned the message => analyzer.lab28(oml_o33)
+
+AnalyzerXXX 	- Read the HL7 message to convert it into a message specific to this type of analyzer [TODO]
+		- Send specific message [TODO]
+		- Receive return message
+		- Convert return message to ORL^O34 HL7 message [TODO]
+
+MyResource	- Returns response OK with ORL_O34 HL7 message

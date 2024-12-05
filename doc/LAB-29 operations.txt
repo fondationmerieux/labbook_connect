@@ -1,0 +1,13 @@
+LAB-29 operations with LabBook Connect
+
+AnalyzerXXX	- Listen device
+		- Receive specific message
+		- If the message concerns a LAB-29 transaction [TODO]
+		- convert message to OUL^R22 HL7 message [TODO]
+
+Analyzer	- send OUL^R22 to LIS
+		- receive return ACK^R22 HL7 message
+
+AnalyzerXXX	- Convert ACK^R22 to specific to this type of analyzer [TODO]
+
+Analyzer	- Send ACK with converted message to device
