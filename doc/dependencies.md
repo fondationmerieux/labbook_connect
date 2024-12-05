@@ -8,7 +8,6 @@
 | Glassfish JABX          | 3.1.3     | EDL 1.0      |
 | Jakarta Activation API  | 2.1.2     | EDL 1.0      |
 | SLF4J API               | 2.0.9     | MIT          |
-| HAPI HL7                | 2.5.1     | Apache 2.0   |
 | toml4j                  | 0.7.2     | MIT          |
 
 > Note :

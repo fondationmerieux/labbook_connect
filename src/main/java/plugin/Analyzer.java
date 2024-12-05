@@ -1,5 +1,7 @@
 package plugin;
 
+//import ca.uhn.hl7v2.model.Message;
+
 /**
  * This interface defines the methods to be used when writing an analyzer class.
  */
@@ -25,6 +27,12 @@ public interface Analyzer {
 	 * The value is read from the configuration.
 	 */
 	public String url_upstream_lab29 = "";
+	
+	public String type_cnx = "";
+	public String type_msg = "";
+	public String mode = "";
+	public String ip_analyzer = "";
+	public int port_analyzer = 0;
 	
 	/**
 	 * Return value of id_analyzer.
@@ -68,6 +76,16 @@ public interface Analyzer {
 	 */
 	public void setUrl_upstream_lab29(String url);
 	
+	public void setType_cnx(String type_cnx);
+	
+	public void setType_msg(String type_msg);
+	
+	public void setMode(String mode);
+	
+	public void setIp_analyzer(String ip_analyzer);
+
+	public void setPort_analyzer(int port_analyzer);
+	
 	/**
 	 * This method creates an instance of this class
 	 */
@@ -87,9 +105,10 @@ public interface Analyzer {
 	 * - converts the RSP_K11 message into a message than can be understood by the analyzer,
 	 * - sends the message to the analyzer.
 	 *
+	 * @param String msg_hl7
 	 * @return empty String
 	 */
-	public String lab27();
+	public String lab27(final String msg);
 
 	/**
 	 * This method handles the AWOS Broadcast [LAB-28] IHE transaction.
@@ -114,5 +133,17 @@ public interface Analyzer {
 	 * 
 	 * @return empty String
 	 */
-	public String lab29();
+	public String lab29(final String msg);
+
+	/**
+	 * This method detects which type of IHE transaction the message received is intended for.
+	 * @param str_hl7 String of HL7 message
+	 * @return String msg_ack
+	 */
+	public String msg_received_from_analyzer(String str_hl7);
+	
+	/**
+	 * TODO
+	 */
+	public void listenDevice();
 }

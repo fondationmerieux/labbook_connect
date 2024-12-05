@@ -101,7 +101,7 @@ public class AnalyzerLoader {
 	
 	public int loadAnalyzers()
 	{
-		// LOAD all analyzers jar plugins
+		// LOAD all classes of analyzers jar plugins
     	try {
     		AnalyzerLoader analyzerLoader = new AnalyzerLoader();
 
@@ -151,14 +151,37 @@ public class AnalyzerLoader {
 		String plugin_name = setting.getString("analyzer.plugin") ;
 		String url_lab27   = setting.getString("analyzer.lab27") ;
 		String url_lab29   = setting.getString("analyzer.lab29") ;
+		String type_cnx    = setting.getString("analyzer.type_cnx") ;
+		String type_msg    = setting.getString("analyzer.type_msg") ;
+		String mode        = setting.getString("analyzer.mode") ;
+		String ip_analyzer = "";
+		int port_analyzer  = 0;
 		
 		System.out.println("DEBUG id_analyzer=" + id_analyzer + " plugin_name=" + plugin_name);
 		System.out.println("DEBUG url_lis_lab27 = " + url_lab27);
 		System.out.println("DEBUG url_lis_lab29 = " + url_lab29);
+		System.out.println("DEBUG type_cnx = " + type_cnx);
+		System.out.println("DEBUG type_msg = " + type_msg);
+		System.out.println("DEBUG mode = " + mode);
 		
-		if (!id_analyzer.isEmpty() && !plugin_name.isEmpty() && !url_lab29.isEmpty())
+		if (type_cnx.equals("socket")) {
+			mode 		   = setting.getString("analyzer.socket.mode") ;
+			ip_analyzer    = setting.getString("analyzer.socket.ip") ;
+			port_analyzer  = setting.getLong("analyzer.socket.port").intValue() ;
+			
+			System.out.println("DEBUG mode = " + mode);
+			System.out.println("DEBUG ip_analyzer = " + ip_analyzer);
+			System.out.println("DEBUG port_analyzer = " + port_analyzer);
+		}
+		
+		if (id_analyzer != null && !id_analyzer.isEmpty() && 
+			plugin_name != null && !plugin_name.isEmpty() && 
+			!type_cnx.isEmpty() && !type_msg.isEmpty() &&
+			( (type_cnx.equals("socket") && mode.equals("server") && port_analyzer > 0) ||
+			  (type_cnx.equals("socket") && mode.equals("client") && !ip_analyzer.isEmpty() && port_analyzer > 0) )
+		)
 		{
-			System.out.println("DEBUG id_analyzer, plugin_name and url_lab29 are not empty");
+			System.out.println("DEBUG id_analyzer, plugin_name ... are not empty");
 			
 			for (Analyzer analyzer : App.analyzers_classes) {
 				System.out.println("DEBUG analyzer.test()=" + analyzer.test());
@@ -234,9 +257,18 @@ public class AnalyzerLoader {
 					newAnalyzer.setId_analyzer(id_analyzer);
 					newAnalyzer.setUrl_upstream_lab27(url_lab27);
 					newAnalyzer.setUrl_upstream_lab29(url_lab29);
+					newAnalyzer.setType_cnx(type_cnx);
+					newAnalyzer.setType_msg(type_msg);
+					newAnalyzer.setMode(mode);
+					newAnalyzer.setIp_analyzer(ip_analyzer);
+					newAnalyzer.setPort_analyzer(port_analyzer);
 					
 					App.analyzers_loaded.add(newAnalyzer);
 					
+					// RUN listen analyzer device
+					newAnalyzer.listenDevice();
+					
+					/* DEBUG DESACT OLD TEST
 					// Not all analyzers make lab27
 					if (!url_lab27.isEmpty())
 					{
@@ -246,6 +278,7 @@ public class AnalyzerLoader {
 					
 					Thread thread_lab29 = new Thread(() -> newAnalyzer.lab29());
 					thread_lab29.start();
+					*/
 					
 					System.out.println("DEBUG " + newAnalyzer.test() + " with id=" + newAnalyzer.getId_analyzer() + " added to analyzers_loaded");
 					} catch (Exception e) {

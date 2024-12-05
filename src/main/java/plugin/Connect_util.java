@@ -32,7 +32,7 @@ public class Connect_util {
 			connection.setRequestProperty("Content-Type", "application/hl7-v2");
 
 			String payload = hl7_msg.toString();
-			System.out.println("DEBUG LAB29 payload = " + payload);
+			System.out.println("DEBUG payload = " + payload);
 			try (OutputStream os = connection.getOutputStream()) {
 				byte[] input = payload.getBytes("utf-8");
 				os.write(input, 0, input.length);

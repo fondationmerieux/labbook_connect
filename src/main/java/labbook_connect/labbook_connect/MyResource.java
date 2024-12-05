@@ -1,6 +1,9 @@
 package labbook_connect.labbook_connect;
 
-
+import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.model.v251.segment.MSH;
+import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.parser.PipeParser;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -10,6 +13,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import plugin.Analyzer;
+
 
 /**
  * Class of access points 
@@ -127,6 +131,51 @@ public class MyResource {
     	System.out.println("DEBUG WS lab28 orl_o34 : " + orl_o34);
     	
         return Response.ok(orl_o34).build();
+    }
+	
+	/**
+     * Access point to received message from analyzers.
+     * 
+     * @param msg_hl7 HL7 string
+     * @return msg_ack.
+     */
+	@POST
+    @Path("analyzer_msg")
+    @Consumes(APPLICATION_HL7_V2)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response analyzer_msg(String str_hl7) {
+    	String msg_ack = "";
+    	
+    	String id_analyzer = "";
+    	
+    	// GET id of analyzer from messsage received
+    	try {
+			System.out.println("DEBUG analyzer_msg hl7_received :\n" + str_hl7);
+			Parser parser = new PipeParser();
+			
+			Message msg = parser.parse(str_hl7);
+			
+			MSH msh = (MSH) msg.get("MSH");
+
+			id_analyzer = msh.getSendingFacility().getNamespaceID().getValue();
+			
+			System.out.println("DEBUG analyzer_msg id_analyzer : " + id_analyzer);
+		} catch (Exception e) {
+			System.out.println("ERROR analyzer_msg parse hl7 received : " + e);
+		}
+
+    	// Send message to analyzer for treatment
+    	for (Analyzer analyzer : App.analyzers_loaded) {
+    		System.out.println("DEBUG analyzer.getId_analyzer() = " + analyzer.getId_analyzer());
+    		if (id_analyzer.equals(analyzer.getId_analyzer()))
+    		{    		
+    		msg_ack = analyzer.msg_received_from_analyzer(str_hl7) ;
+    		}
+    	}
+    	
+    	System.out.println("DEBUG WS analyzer_msg msg_ack : " + msg_ack);
+    	
+        return Response.ok(msg_ack).build();
     }
 	
 	/**
