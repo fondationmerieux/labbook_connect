@@ -4,6 +4,8 @@ import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v251.segment.MSH;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -37,6 +39,36 @@ public class MyResource {
     public String test() {
     	System.out.println("WS test");
         return App.VERSION;
+    }
+    
+    /**
+     * Checks if an analyzer is loaded by its ID.
+     *
+     * @param id_analyzer The ID of the analyzer to check.
+     * @return A JSON response with status "OK" if loaded, or "ERR" with an error message.
+     */
+    @GET
+    @Path("is_analyzer_loaded/{id_analyzer}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response isAnalyzerLoaded(@PathParam("id_analyzer") String id_analyzer) {
+        System.out.println("WS isAnalyzerLoaded id_analyzer=" + id_analyzer);
+
+        for (Analyzer analyzer : App.analyzers_loaded) {
+            if (id_analyzer.equals(analyzer.getId_analyzer())) {
+                JsonObject response = Json.createObjectBuilder()
+                    .add("status", "OK")
+                    .add("message", "Analyzer is loaded.")
+                    .build();
+                return Response.ok(response.toString()).build();
+            }
+        }
+
+        // If the analyzer is not found, return an error response
+        JsonObject response = Json.createObjectBuilder()
+            .add("status", "ERR")
+            .add("message", "Analyzer with ID '" + id_analyzer + "' is not loaded.")
+            .build();
+        return Response.status(Response.Status.NOT_FOUND).entity(response.toString()).build();
     }
     
     /**
@@ -110,27 +142,42 @@ public class MyResource {
      * @param oml_o33 HL7 string
      * @return plugin name for each loaded analyzers.
      */
-	@POST
+    @POST
     @Path("lab28/{id_analyzer}")
     @Consumes(APPLICATION_HL7_V2)
     @Produces(MediaType.TEXT_PLAIN)
     public Response lab28(@PathParam("id_analyzer") String id_analyzer, String oml_o33) {
     	System.out.println("DEBUG WS lab28 id_analyzer=" + id_analyzer + ", oml_o33 : " + oml_o33);
-    	
+
     	String orl_o34 = "";
-    	
-    	// give message to plugin
-    	for (Analyzer analyzer : App.analyzers_loaded) {
-    		System.out.println("DEBUG analyzer.getId_analyzer() = " + analyzer.getId_analyzer());
-    		if (id_analyzer.equals(analyzer.getId_analyzer()))
-    		{
-    		orl_o34 = analyzer.lab28(oml_o33) ;
+
+    	try {
+    		// give message to plugin
+    		for (Analyzer analyzer : App.analyzers_loaded) {
+    			System.out.println("DEBUG analyzer.getId_analyzer() = " + analyzer.getId_analyzer());
+    			if (id_analyzer.equals(analyzer.getId_analyzer()))
+    			{
+    				orl_o34 = analyzer.lab28(oml_o33) ;
+    				break;
+    			}
     		}
+
+    		if (orl_o34.isEmpty()) {
+    			System.out.println("ERROR WS lab28 - No analyzer found for id: " + id_analyzer);
+    			return Response.status(Response.Status.NOT_FOUND)
+    					.entity("Analyzer not found for id: " + id_analyzer)
+    					.build();
+    		}
+
+    		System.out.println("DEBUG WS lab28 orl_o34 : " + orl_o34);
+
+    		return Response.ok(orl_o34).build();
+    	} catch (Exception e) {
+    		System.err.println("ERROR WS lab28: " + e.getMessage());
+    		return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+    				.entity("Internal Server Error")
+    				.build();
     	}
-    	
-    	System.out.println("DEBUG WS lab28 orl_o34 : " + orl_o34);
-    	
-        return Response.ok(orl_o34).build();
     }
 	
 	/**

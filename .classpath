@@ -38,5 +38,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="src/main/resource"/>
+	<classpathentry kind="lib" path="/home/source/workspace/labbook_connect/lib/ASTM_E1381_02.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

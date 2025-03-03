@@ -33,6 +33,7 @@ public interface Analyzer {
 	public String mode = "";
 	public String ip_analyzer = "";
 	public int port_analyzer = 0;
+	public boolean listening = false;
 	
 	/**
 	 * Return value of id_analyzer.
@@ -143,7 +144,12 @@ public interface Analyzer {
 	public String msg_received_from_analyzer(String str_hl7);
 	
 	/**
-	 * TODO
+	 * Listen to the analyzer, the method depends on the type_cnx parameter
 	 */
 	public void listenDevice();
+	
+	/**
+	 * returns whether the plugin listens to the analyzer
+	 */
+	public boolean isListening();
 }

@@ -6,6 +6,9 @@ COPY storage /storage
 # Define the working directory in the container
 WORKDIR /app
 
+# Create the logs directory before running the application
+RUN mkdir -p /app/logs
+
 # Copy your application's JAR file into the container
 COPY /bin/labbook_connect.jar /app/labbook_connect.jar
 

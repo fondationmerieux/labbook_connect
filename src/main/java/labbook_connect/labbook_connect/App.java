@@ -40,6 +40,8 @@ public class App {
 
 		/** Set API REST */
 		final ResourceConfig config = new ResourceConfig(MyResource.class);
+		
+		config.register(CORSFilter.class);
 
 		/** INIT server */
 		Server server = new Server(serv_host);

@@ -1,0 +1,39 @@
+Analyzer.java du socleet coté driver
+
+*** Variables ***
+
+public String id_analyzer = "";
+
+public String url_upstream_lab27 = "";
+public String url_upstream_lab29 = "";
+
+public String type_cnx = "";
+public String type_msg = "";
+public String mode = "";
+public String ip_analyzer = "";
+public int port_analyzer = 0;
+	
+*** Fonctions ***
+
+public String getId_analyzer();
+public void setId_analyzer(String id_analyzer);
+
+public String getUrl_upstream_lab27();
+public void setUrl_upstream_lab27(String url);
+public String getUrl_upstream_lab29();
+public void setUrl_upstream_lab29(String url);
+
+public void setType_cnx(String type_cnx);
+public void setType_msg(String type_msg);
+public void setMode(String mode);
+public void setIp_analyzer(String ip_analyzer);
+public void setPort_analyzer(int port_analyzer);
+
+public Analyzer copy();
+public String test();
+public String lab27(final String msg);
+public String lab28(final String str_OML_O33);
+public String lab29(final String msg);
+public String msg_received_from_analyzer(String str_hl7);
+public void listenDevice();
+
