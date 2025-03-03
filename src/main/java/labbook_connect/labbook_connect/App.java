@@ -18,8 +18,8 @@ import plugin.Analyzer;
  **/
 public class App {
 	
-	public static final String VERSION  = "1.0.1";
-	public static final int NUM_VERSION = 1001;
+	public static final String VERSION  = "1.0.2";
+	public static final int NUM_VERSION = 1002;
 	
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
 	public static List<Analyzer> analyzers_loaded = new ArrayList<Analyzer>();
