@@ -6,13 +6,12 @@ SAVE_DIR=/tmp
 DEFAULT_URL_PREFIX=/connect
 
 # TODO
-# - read version number somewhere
 # - add LOGLEVEL setup
 # - add map to storage volume if running with LabBook
 
-DEFAULT_VERSION=1.0.0
+DEFAULT_VERSION=$(shell grep " \<VERSION\> " src/main/java/labbook_connect/labbook_connect/App.java | sed -e 's/^.*VERSION\s\+=\s\+"//' | sed -e 's/".*$$//')
 
-# $(info DEFAULT_VERSION=$(DEFAULT_VERSION)
+# $(info DEFAULT_VERSION=$(DEFAULT_VERSION))
 
 CONTAINER_NAME=labbook_connect
 DEVRUN_HTTP=8080

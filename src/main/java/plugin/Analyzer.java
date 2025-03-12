@@ -1,155 +1,162 @@
 package plugin;
 
-//import ca.uhn.hl7v2.model.Message;
-
 /**
- * This interface defines the methods to be used when writing an analyzer class.
+ * This interface defines the methods to be implemented for an analyzer.
  */
 public interface Analyzer {
-	
-	/**
-	 * Variable to specify this analyzer's identifier
-	 *
-	 * The value is read from the configuration.
-	 */
-	public String id_analyzer = "";
-	
-	/**
-	 * Variable to specify endpoint of upstream for lab27 transaction
-	 *
-	 * The value is read from the configuration.
-	 */
-	public String url_upstream_lab27 = "";
-	
-	/**
-	 * Variable to specify endpoint of upstream for lab29 transaction
-	 *
-	 * The value is read from the configuration.
-	 */
-	public String url_upstream_lab29 = "";
-	
-	public String type_cnx = "";
-	public String type_msg = "";
-	public String mode = "";
-	public String ip_analyzer = "";
-	public int port_analyzer = 0;
-	public boolean listening = false;
-	
-	/**
-	 * Return value of id_analyzer.
-	 * 
-	 * @return id_analyzer
-	 */
-	public String getId_analyzer();
-	
-	/**
-	 * Defines the value of id_analyzer.
-	 * 
-	 * @param id_analyzer value for id_analyzer.
-	 */
-	public void setId_analyzer(String id_analyzer);
-	
-	/**
-	 * Return value of url_upstream_lab27.
-	 * 
-	 * @return url_upstream_lab27
-	 */
-	public String getUrl_upstream_lab27();
-	
-	/**
-	 * Defines the value of url_upstream_lab27.
-	 * 
-	 * @param url value for url_upstream_lab27.
-	 */
-	public void setUrl_upstream_lab27(String url);
-	
-	/**
-	 * Return value of url_upstream_lab29.
-	 * 
-	 * @return url_upstream_lab29
-	 */
-	public String getUrl_upstream_lab29();
-	
-	/**
-	 * Defines the value of url_upstream_lab29.
-	 * 
-	 * @param url value for url_upstream_lab29.
-	 */
-	public void setUrl_upstream_lab29(String url);
-	
-	public void setType_cnx(String type_cnx);
-	
-	public void setType_msg(String type_msg);
-	
-	public void setMode(String mode);
-	
-	public void setIp_analyzer(String ip_analyzer);
+    
+    /**
+     * Gets the analyzer identifier.
+     * @return The analyzer ID.
+     */
+    String getId_analyzer();
 
-	public void setPort_analyzer(int port_analyzer);
-	
-	/**
-	 * This method creates an instance of this class
-	 */
-	public Analyzer copy();
-	
-	/**
-	 * @return name of this plugin
-	 */
-	public String test();
-	
-	/**
-	 * This method handles the Query for AWOS [LAB-27] IHE transaction.
-	 * Some analyzers do not issue queries, in this case this method can remain empty.
-	 * - waits for a query from the analyzer and converts it into an hl7 message of type OBP_Q11,
-	 * - POST it over HTTP to url_upstream_lab27,
-	 * - waits for the HTTP response containing the ack in hl7 format of type RSP_K11,
-	 * - converts the RSP_K11 message into a message than can be understood by the analyzer,
-	 * - sends the message to the analyzer.
-	 *
-	 * @param String msg_hl7
-	 * @return empty String
-	 */
-	public String lab27(final String msg);
+    /**
+     * Sets the analyzer identifier.
+     * @param id_analyzer The analyzer ID.
+     */
+    void setId_analyzer(String id_analyzer);
 
-	/**
-	 * This method handles the AWOS Broadcast [LAB-28] IHE transaction.
-	 * - receives a string representing an HL7 OML_O33 message, coming from the payload of an HTTP POST request received on the lab28 url,
-	 * - converts the HL7 message into a message than can be understood by the analyzer,
-	 * - transmits the message to the analyzer and waits for the response,
-	 * - converts the analyzer response into an hl7 message of type ORL_O34,
-	 * - returns the message as a string, which is then transmitted as the payload of the HTTP POST response.
-	 *
-	 * @param str_OML_O33 HL7 String of type OML_O33.
-	 * @return String orl_o34
-	 */
-	public String lab28(final String str_OML_O33);
+    /**
+     * Gets the upstream URL for lab27 transactions.
+     * @return The lab27 upstream URL.
+     */
+    String getUrl_upstream_lab27();
 
-	/**
-	 * This method handles the AWOS Status Change [LAB-29] IHE transaction.
-	 * - waits for a status change from the analyzer and converts it into an hl7 message of type OUL_R22,
-	 * - POST it over HTTP to url_upstream_lab29,
-	 * - waits for the HTTP response containing the ack in hl7 format of type ACK_R22,
-	 * - converts the ACK_R22 message into a message than can be understood by the analyzer,
-	 * - sends the message to the analyzer.
-	 * 
-	 * @return empty String
-	 */
-	public String lab29(final String msg);
+    /**
+     * Sets the upstream URL for lab27 transactions.
+     * @param url The lab27 upstream URL.
+     */
+    void setUrl_upstream_lab27(String url);
 
-	/**
-	 * This method detects which type of IHE transaction the message received is intended for.
-	 * @param str_hl7 String of HL7 message
-	 * @return String msg_ack
-	 */
-	public String msg_received_from_analyzer(String str_hl7);
-	
-	/**
-	 * Listen to the analyzer, the method depends on the type_cnx parameter
-	 */
-	public void listenDevice();
-	
-	/**
-	 * returns whether the plugin listens to the analyzer
-	 */
-	public boolean isListening();
+    /**
+     * Gets the upstream URL for lab29 transactions.
+     * @return The lab29 upstream URL.
+     */
+    String getUrl_upstream_lab29();
+
+    /**
+     * Sets the upstream URL for lab29 transactions.
+     * @param url The lab29 upstream URL.
+     */
+    void setUrl_upstream_lab29(String url);
+
+    /**
+     * Sets the analyzer version.
+     * @param version The version string.
+     */
+    void setVersion(String version);
+
+    /**
+     * Sets the connection type (e.g., "socket").
+     * @param type_cnx The connection type.
+     */
+    void setType_cnx(String type_cnx);
+
+    /**
+     * Sets the message type (e.g., "HL7").
+     * @param type_msg The message type.
+     */
+    void setType_msg(String type_msg);
+
+    /**
+     * Sets whether messages should be archived.
+     * @param archive_msg "Y" to enable archiving, "N" to disable.
+     */
+    void setArchive_msg(String archive_msg);
+    
+    /**
+     * Sets the operating mode of the analyzer (batch or query).
+     * @param operation_mode The operating mode.
+     */
+    void setOperationMode(String operation_mode);
+
+    /**
+     * Sets the operating mode (e.g., "client" or "server").
+     * @param mode The operating mode.
+     */
+    void setMode(String mode);
+
+    /**
+     * Sets the analyzer's IP address.
+     * @param ip_analyzer The IP address.
+     */
+    void setIp_analyzer(String ip_analyzer);
+
+    /**
+     * Sets the analyzer's connection port.
+     * @param port_analyzer The port number.
+     */
+    void setPort_analyzer(int port_analyzer);
+
+    /**
+     * Creates a new instance of this class.
+     * @return A copy of the current analyzer.
+     */
+    Analyzer copy();
+
+    /**
+     * Returns the name of this plugin.
+     * @return The plugin name.
+     */
+    String test();
+    
+    /**
+     * Returns detailed information about the analyzer.
+     *
+     * @return String containing version, id_analyzer, connection details, and configuration.
+     */
+    String info();
+
+    /**
+     * Handles the Query for AWOS [LAB-27] IHE transaction.
+     * Some analyzers do not issue queries; in this case, this method can remain empty.
+     * - Waits for a query from the analyzer and converts it into an HL7 message (OBP_Q11).
+     * - Sends it over HTTP to url_upstream_lab27.
+     * - Waits for the HTTP response (RSP_K11).
+     * - Converts the RSP_K11 message into a format understood by the analyzer.
+     * - Sends the message to the analyzer.
+     *
+     * @param msg The HL7 message.
+     * @return The response from the LIS.
+     */
+    String lab27(final String msg);
+
+    /**
+     * Handles the AWOS Broadcast [LAB-28] IHE transaction.
+     * - Receives an HL7 OML_O33 message from an HTTP POST request.
+     * - Converts the HL7 message into a format understood by the analyzer.
+     * - Sends it to the analyzer and waits for a response.
+     * - Converts the response into an HL7 ORL_O34 message.
+     * - Returns the ORL_O34 message as a string.
+     *
+     * @param str_OML_O33 The HL7 OML_O33 message.
+     * @return The ORL_O34 response message.
+     */
+    String lab28(final String str_OML_O33);
+
+    /**
+     * Handles the AWOS Status Change [LAB-29] IHE transaction.
+     * - Waits for a status change from the analyzer and converts it into an HL7 OUL_R22 message.
+     * - Sends it over HTTP to url_upstream_lab29.
+     * - Waits for an HL7 ACK_R22 response.
+     * - Converts the ACK_R22 message into a format understood by the analyzer.
+     * - Sends the message to the analyzer.
+     *
+     * @param msg The HL7 message.
+     * @return The LIS response.
+     */
+    String lab29(final String msg);
+
+    /**
+     * Starts listening for messages from the analyzer.
+     * The behavior depends on the type of connection (e.g., "socket").
+     */
+    void listenDevice();
+
+    /**
+     * Checks if the analyzer is currently listening for incoming messages.
+     * @return True if the analyzer is listening, false otherwise.
+     */
+    boolean isListening();
 }

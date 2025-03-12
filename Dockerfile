@@ -1,7 +1,9 @@
 FROM openjdk:21
 
-# permanent files
-COPY storage /storage
+# create storage
+RUN mkdir -p /storage/resource/connect/analyzer/mapping
+RUN mkdir -p /storage/resource/connect/analyzer/plugin
+RUN mkdir -p /storage/resource/connect/analyzer/setting
 
 # Define the working directory in the container
 WORKDIR /app

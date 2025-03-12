@@ -10,6 +10,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import plugin.Analyzer;
 
@@ -18,15 +20,17 @@ import plugin.Analyzer;
  **/
 public class App {
 	
-	public static final String VERSION  = "1.0.2";
-	public static final int NUM_VERSION = 1002;
+	private static final Logger logger = LoggerFactory.getLogger(App.class);
+	
+	public static final String VERSION  = "1.0.3";
+	public static final int NUM_VERSION = 1003;
 	
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
 	public static List<Analyzer> analyzers_loaded = new ArrayList<Analyzer>();
 
 	public static void main(String[] args) {
 		Date currentTimestamp = new Date();
-		System.out.println("*** " + currentTimestamp + " BEGIN App main version : " + App.VERSION + " ***" );
+		logger.info("*** {} BEGIN App main version: {} ***", currentTimestamp, App.VERSION);
 		
 		AnalyzerLoader analyzerLoader = new AnalyzerLoader();
     	
@@ -54,11 +58,11 @@ public class App {
 
 		/** RUN server */
 		try {
-			System.out.println("START server");
+			logger.info("START server on {}:{}", host, port);
 			server.start();
 			server.join();
 		} catch(Exception e) {
-			System.out.println("ERROR RUN server :"+e.toString());
+			logger.error("ERROR RUN server: ", e);
 		} finally {
 			server.destroy();
 		}
