@@ -83,12 +83,15 @@ public class AnalyzerLoader {
 	            } else {
 	                logger.error(": " + className + " does not implement Analyzer.");
 	            }
+	        } catch (ClassNotFoundException e) {
+	            logger.error("ERROR Analyzer class not found in JAR: {}", e.getMessage(), e);
+	        } catch (ReflectiveOperationException e) {
+	            logger.error("ERROR instantiating analyzer class: {}", e.getMessage(), e);
 	        } catch (Exception e) {
-	            logger.error(" loading class " + className + ": " + e.getMessage());
-	            e.printStackTrace();
+	            logger.error("ERROR Unexpected loading analyzer plugin: {}", e.getMessage(), e);
 	        }
 		} catch (IOException e) {
-			logger.info("DEBUG ERROR e :" + e);
+			logger.info("ERROR loadPlugin :" + e);
 		}
 	}
 	
@@ -110,7 +113,7 @@ public class AnalyzerLoader {
 			else
 				logger.info("analyzers_classes is empty");
 		} catch(Exception e) {
-			logger.error(" Load plugins :"+e.toString());
+			logger.error("ERROR Load plugins :"+e.toString());
 		}
 
 		// LOAD analyzers settings and set corresponding analyzers_loaded
@@ -126,7 +129,7 @@ public class AnalyzerLoader {
 		                logger.info("Processing settings file: {}", file.toAbsolutePath());
 		                parse_setting(file);
 		            } catch (Exception e) {
-		                logger.error("Error processing file {}: {}", file, e.getMessage(), e);
+		                logger.error("ERROR processing settings file {}: {}", file, e.getMessage(), e);
 		            }
 		        });
 		} catch (IOException e) {

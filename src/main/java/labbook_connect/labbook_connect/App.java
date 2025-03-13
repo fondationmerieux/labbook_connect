@@ -1,5 +1,6 @@
 package labbook_connect.labbook_connect;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,8 @@ public class App {
 	public static void main(String[] args) {
 		Date currentTimestamp = new Date();
 		logger.info("*** {} BEGIN App main version: {} ***", currentTimestamp, App.VERSION);
+		
+		createRequiredDirectories();
 		
 		AnalyzerLoader analyzerLoader = new AnalyzerLoader();
     	
@@ -66,5 +69,31 @@ public class App {
 		} finally {
 			server.destroy();
 		}
+	}
+	
+	/**
+	 * Ensure required directories exist.
+	 */
+	private static void createRequiredDirectories() {
+	    String[] directories = {
+	        "/storage/resource/connect",
+	        "/storage/resource/connect/analyzer",
+	        "/storage/resource/connect/analyzer/mapping",
+	        "/storage/resource/connect/analyzer/plugin",
+	        "/storage/resource/connect/analyzer/setting"
+	    };
+
+	    for (String dirPath : directories) {
+	        File dir = new File(dirPath);
+	        if (!dir.exists()) {
+	            if (dir.mkdirs()) {
+	                logger.info("Created directory: " + dirPath);
+	            } else {
+	                logger.error("Failed to create directory: " + dirPath);
+	            }
+	        } else {
+	            logger.info("Directory already exists: " + dirPath);
+	        }
+	    }
 	}
 }

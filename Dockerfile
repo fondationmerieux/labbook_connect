@@ -1,10 +1,5 @@
 FROM openjdk:21
 
-# create storage
-RUN mkdir -p /storage/resource/connect/analyzer/mapping
-RUN mkdir -p /storage/resource/connect/analyzer/plugin
-RUN mkdir -p /storage/resource/connect/analyzer/setting
-
 # Define the working directory in the container
 WORKDIR /app
 

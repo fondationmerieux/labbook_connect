@@ -120,10 +120,12 @@ public class Connect_util {
 				
 				return response.toString();
 			}
+		} catch (IOException e) {
+		    logger.error("Network error while sending HL7 message: {}", e.getMessage(), e);
+		    return "ERROR send_hl7_msg Network : " + e.getMessage();
 		} catch (Exception e) {
-			logger.error("send_hl7_msg HTTP connection error: ", e);
-			
-			return "ERROR send_hl7_msg HTTP connection e : " + e.getMessage();
+			logger.error("General Error during HL7 message transmission: {}", e.getMessage(), e);			
+			return "ERROR send_hl7_msg HTTP connection : " + e.getMessage();
 		}
 	}
 	
@@ -179,7 +181,9 @@ public class Connect_util {
             logger.info("Archived message at {}", filePath);
 
         } catch (IOException e) {
-        	logger.error("Lab Archive ERROR: Failed to archive HL7 message", e);
+        	logger.error("ERROR Lab Archive : Unable to archive message due to IO issue: {}", e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("ERROR Lab Archive unexpected : {}", e.getMessage(), e);
         }
     }
 }
