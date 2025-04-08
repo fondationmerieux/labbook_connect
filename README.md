@@ -26,9 +26,7 @@ This repository contains the material needed to build the LabBook Connect contai
 
 Each analyzer plugin is available in its own repository.
 
-For convenience, this repository contains a prebuilt version of LabBook Connect in `bin/labbook_connect.jar` and
-a plugin (AnalyzerDemo) in binary form in `resource/connect/analyzer/plugin/AnalyzerDemo.jar`.
-This allows you to build a container without installing the development environment and building a plugin.
+For convenience, this repository contains a prebuilt version of LabBook Connect in `bin/labbook_connect.jar`.
 
 For more information about plugins in general and the AnalyzerDemo plugin in particular please refer
 to the [AnalyzerDemo plugin repository](https://github.com/fondationmerieux/labbook_connect_plugin_demo).
@@ -126,76 +124,8 @@ On startup LabBook Connect:
 
 - loads the plugins present in `/storage/resource/connect/analyzer/plugin/`,
 - reads the configuration files present in `/storage/resource/connect/analyzer/setting/`,
-- creates a directory for each analyzer present in the configuration files.
+- creates a directory for each analyzer present in the configuration files in `/storage/resource/connect/analyzer'.
   The directory name is the plugin ID.
-
-A configuration file example with a demo analyzer in available in `storage/resource/connect/analyzer/setting/id_analyzer_demo.toml`.
-
-# Test with the AnalyzerDemo plugin
-
-The project contains a demo plugin with a basic configuration:
-
-- AnalyzerDemo plugin in `resource/connect/analyzer/plugin/AnalyzerDemo.jar`,
-- configuration file in `/storage/resource/connect/analyzer/setting/id_analyzer_demo.toml`,
-
-Start the container:
-
-`$ make devrun`
-
-Test it started:
-
-~~~
-$ curl http://localhost:8080/connect/test
-1.0.0
-~~~
-
-The container is started with volume maps for /storage and /app/logs.
-
-LabBook Connect uses the /storage volume to hold various files.
-The initial content of the volume is stored in the `./storage` directory of the source tree.
-In order to prevent modification of this directory it is replicated to a `DEVRUN_STORAGE` directory before mounting it into the container.
-`DEVRUN_STORAGE=./devrun_storage` by default, you can modify it by setting the `DEVRUN_STORAGE` environment variable.
-
-Similarly the directory for logs is defined by default `DEVRUN_LOG_DIR=./logs`
-You can modify it by setting the `DEVRUN_LOG_DIR` environment variable.
-
-## Test LAB-27
-
-The AnalyzerDemo plugin reads incoming queries in `/storage/resource/connect/analyzer/<ID>/lab27/`.
-The files must be in the TOML format and contain:
-
-~~~
-[message]
-  control_id  = "id_of_control"
-~~~
-
-An HTTP POST request is sent to the upstream lab27 endpoint defined in the configuration with a dummy HL7 OBP_Q11 message payload.
-
-After that the file is moved to `/storage/resource/connect/analyzer/<ID>/archive_lab27/`.
-
-## Test LAB-28
-
-You can send test OML_33 messages to the lab28 endpoint:
-
-~~~
-curl -v -X POST "http://server:8080/connect/lab28/id_analyzer_demo"\
-    -H "Content-Type: application/hl7-v2"\
-    -d "MSH|^~\\&|ULTRA|TML|OLIS|OLIS|202312201130||OML^O33|123456|T|2.5.1"
-~~~
-
-## Test LAB-29
-
-The AnalyzerDemo plugin reads incoming status changes in `/storage/resource/connect/analyzer/<ID>/lab29/`.
-The files must be in the TOML format and contain:
-
-~~~
-[message]
-  control_id  = "id_of_control"
-~~~
-
-An HTTP POST request is sent to the upstream lab29 endpoint defined in the configuration with a dummy HL7 OUL_R22 message payload.
-
-After that the file is moved to `/storage/resource/connect/analyzer/<ID>/archive_lab29/`.
 
 # Changes
 
