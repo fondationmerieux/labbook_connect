@@ -39,6 +39,7 @@ public class AnalyzerLoader {
 		try {
 			Files.walk(directory)
 			.filter(Files::isRegularFile)
+			.filter(file -> !file.getFileName().toString().startsWith("."))
 			.forEach(file -> {
 				logger.info("Found plugin JAR: {}", file.getFileName());
 				loadPlugin(file);
@@ -124,6 +125,7 @@ public class AnalyzerLoader {
 		try {
 		    Files.walk(directory)
 		        .filter(Files::isRegularFile)
+		        .filter(file -> !file.getFileName().toString().startsWith("."))
 		        .forEach(file -> {
 		            try {
 		                logger.info("Processing settings file: {}", file.toAbsolutePath());
@@ -169,7 +171,7 @@ public class AnalyzerLoader {
 		logger.info("DEBUG type_msg = " + type_msg);
 		logger.info("DEBUG operation_mode = " + operation_mode);
 
-		if (type_cnx.equals("socket") || type_cnx.equals("MLLP")) {
+		if (type_cnx.equals("socket") || type_cnx.equals("MLLP") || type_cnx.equals("socket_E1381")) {
 			mode 		   = setting.getString("analyzer.socket.mode") ;
 			ip_analyzer    = setting.getString("analyzer.socket.ip") ;
 			port_analyzer  = setting.getLong("analyzer.socket.port").intValue() ;
@@ -182,8 +184,8 @@ public class AnalyzerLoader {
 		if (id_analyzer != null && !id_analyzer.isEmpty() && 
 				plugin_name != null && !plugin_name.isEmpty() && 
 				!type_cnx.isEmpty() && !type_msg.isEmpty() &&
-				( ((type_cnx.equals("socket") || type_cnx.equals("MLLP")) && mode.equals("server") && port_analyzer > 0) ||
-						((type_cnx.equals("socket")  || type_cnx.equals("MLLP")) && mode.equals("client") && !ip_analyzer.isEmpty() && port_analyzer > 0) )
+				( ((type_cnx.equals("socket") || type_cnx.equals("MLLP") || type_cnx.equals("socket_E1381")) && mode.equals("server") && port_analyzer > 0) ||
+						((type_cnx.equals("socket")  || type_cnx.equals("MLLP") || type_cnx.equals("socket_E1381")) && mode.equals("client") && !ip_analyzer.isEmpty() && port_analyzer > 0) )
 				)
 		{
 			logger.info("DEBUG id_analyzer, plugin_name ... are not empty");

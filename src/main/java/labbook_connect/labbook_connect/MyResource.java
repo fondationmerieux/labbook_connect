@@ -167,49 +167,4 @@ public class MyResource {
         logger.info("WS test_lab29 called with oul_r22: {}", oul_r22);
         return Response.ok(oul_r22).build();
     }
-    
-    /* USELESS ??? 09/03/2025
-    @POST
-    @Path("analyzer_msg")
-    @Consumes(APPLICATION_HL7_V2)
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response analyzer_msg(String str_hl7) {
-        String msg_ack = "";
-        String id_analyzer = "";
-
-        try {
-            logger.info("WS analyzer_msg received HL7 message:\n{}", str_hl7);
-            PipeParser parser = new PipeParser();
-            Message msg = parser.parse(str_hl7);
-
-            MSH msh = (MSH) msg.get("MSH");
-            id_analyzer = msh.getSendingFacility().getNamespaceID().getValue();
-
-            logger.info("WS analyzer_msg extracted id_analyzer: {}", id_analyzer);
-        } catch (Exception e) {
-            logger.error("WS analyzer_msg failed to parse HL7 message: ", e);
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid HL7 message format")
-                    .build();
-        }
-
-        // Send message to the corresponding analyzer for processing
-        for (Analyzer analyzer : App.analyzers_loaded) {
-            logger.info("Checking analyzer.getId_analyzer() = {}", analyzer.getId_analyzer());
-            if (id_analyzer.equals(analyzer.getId_analyzer())) {
-                msg_ack = analyzer.msg_received_from_analyzer(str_hl7);
-                break;
-            }
-        }
-
-        if (msg_ack.isEmpty()) {
-            logger.warn("WS analyzer_msg - No response from analyzer: {}", id_analyzer);
-        } else {
-            logger.info("WS analyzer_msg response msg_ack: {}", msg_ack);
-        }
-
-        return Response.ok(msg_ack).build();
-    }
-    */
-
 }
