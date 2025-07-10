@@ -225,8 +225,8 @@ public class AnalyzerLoader {
 							logger.info("DEBUG: via parser type_mode = " + mode);
 							
 							if (!existingAnalyzer.isListening()) {
-					            logger.info("DEBUG: Restarting listenDevice() for " + analyzer.getId_analyzer());
-					            analyzer.listenDevice();
+					            logger.info("DEBUG: Restarting listenDevice() for " + existingAnalyzer.getId_analyzer());
+					            existingAnalyzer.listenDevice();
 					        }
 						} else {
 							logger.info("DEBUG Creating new analyzer " + plugin_name);

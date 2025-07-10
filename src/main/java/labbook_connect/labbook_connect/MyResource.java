@@ -10,6 +10,12 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import plugin.Analyzer;
@@ -116,9 +122,27 @@ public class MyResource {
 
     @POST
     @Path("lab28/{id_analyzer}")
-    @Consumes(APPLICATION_HL7_V2)
+    @Consumes("text/plain")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response lab28(@PathParam("id_analyzer") String id_analyzer, String oml_o33) {
+    public Response lab28(@PathParam("id_analyzer") String id_analyzer, InputStream bodyStream) {
+        String oml_o33;
+
+        try {
+            // Read full raw message as bytes
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] tmp = new byte[4096];
+            int read;
+            while ((read = bodyStream.read(tmp)) != -1) {
+                buffer.write(tmp, 0, read);
+            }
+            oml_o33 = buffer.toString(StandardCharsets.UTF_8);  // no line splitting, keeps \r intact
+
+            logger.info("DEBUG length of HL7 message = {}", oml_o33.length());
+        } catch (IOException e) {
+            logger.error("Error reading HL7 input stream", e);
+            return Response.status(Response.Status.BAD_REQUEST).entity("HL7 input error").build();
+        }
+        
         logger.info("WS lab28 called with id_analyzer={}, oml_o33: {}", id_analyzer, oml_o33);
 
         String orl_o34 = "";
@@ -127,6 +151,8 @@ public class MyResource {
             for (Analyzer analyzer : App.analyzers_loaded) {
                 logger.info("Checking analyzer.getId_analyzer() = {}", analyzer.getId_analyzer());
                 if (id_analyzer.equals(analyzer.getId_analyzer())) {
+                	logger.info("Full raw HL7 message content:\n" + oml_o33.replace("\r", "\n"));
+                	
                     orl_o34 = analyzer.lab28(oml_o33);
                     break;
                 }
@@ -145,10 +171,10 @@ public class MyResource {
         } catch (Exception e) {
             logger.error("WS lab28 encountered an error: ", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Internal Server Error")
-                    .build();
+                    .entity("Internal Server Error").build();
         }
     }
+
 
     @POST
     @Path("test_lab27")
