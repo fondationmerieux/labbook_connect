@@ -1,10 +1,8 @@
 package plugin;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -85,6 +83,7 @@ public class Connect_util {
 	 *
 	 * @param analyzer the analyzer loaded.
 	 * @param url_upstream url to reach service.
+	 * @param hl7_msg      HL7 message in ER7 format
 	 * @return ack, message in hl7 format if OK.
 	 */
 	public static String send_hl7_msg(Analyzer analyzer, String url_upstream, String hl7_msg) {
@@ -97,29 +96,33 @@ public class Connect_util {
 
 			connection.setRequestMethod("POST");
 			connection.setDoOutput(true);
-
 			connection.setRequestProperty("Content-Type", "application/hl7-v2");
 
-			String payload = hl7_msg.toString();
-			System.out.println("DEBUG payload = " + payload);
+			String payload = hl7_msg;
+			
+			logger.info("Sending HL7 payload:\n{}", hl7_msg);
+			
 			try (OutputStream os = connection.getOutputStream()) {
-				byte[] input = payload.getBytes("utf-8");
+				byte[] input = payload.getBytes(StandardCharsets.UTF_8);
 				os.write(input, 0, input.length);
 			}
 
 			// Read response
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-				StringBuilder response = new StringBuilder();
-				String line;
-				while ((line = reader.readLine()) != null) {
-					response.append(line);
-				}
-				logger.info("send_hl7_msg upstream Response: {}", response.toString());
-				
-				connection.disconnect();
-				
-				return response.toString();
-			}
+			try (InputStream is = connection.getInputStream()) {
+	            ByteArrayOutputStream responseBytes = new ByteArrayOutputStream();
+	            byte[] buffer = new byte[1024];
+	            int len;
+	            while ((len = is.read(buffer)) != -1) {
+	                responseBytes.write(buffer, 0, len);
+	            }
+
+	            String response = responseBytes.toString(StandardCharsets.UTF_8.name());
+	            logger.info("send_hl7_msg upstream Response: {}", response);
+
+	            return response;
+	        } finally {
+	            connection.disconnect();
+	        }
 		} catch (IOException e) {
 		    logger.error("Network error while sending HL7 message: {}", e.getMessage(), e);
 		    return "ERROR send_hl7_msg Network : " + e.getMessage();
