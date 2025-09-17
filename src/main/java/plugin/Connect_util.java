@@ -4,6 +4,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.net.ssl.HttpsURLConnection;
+/* deactivating, self-signed certificates are not authorised.
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.SecureRandom;
+*/
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -91,8 +101,43 @@ public class Connect_util {
 			@SuppressWarnings("deprecation")
 			URL url = new URL(url_upstream);
 
-			// Open HTTP connection
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			// Open Http or Https connection
+			HttpURLConnection connection;
+			
+			if (url_upstream.toLowerCase().startsWith("https")) {
+				/* By deactivating this block, self-signed certificates are not authorised.
+			    // Disables certificate verification so that a self-signed certificate can be used 
+			    TrustManager[] trustAllCerts = new TrustManager[] {
+			    		new X509TrustManager() {
+			    		    @Override
+			    		    public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+			    		        // Trust all clients
+			    		    }
+
+			    		    @Override
+			    		    public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+			    		        // Trust all servers
+			    		    }
+
+			    		    @Override
+			    		    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+			    		        return new java.security.cert.X509Certificate[0];
+			    		    }
+			    		}
+		            };
+		            
+		            SSLContext sc = SSLContext.getInstance("TLS");
+		            sc.init(null, trustAllCerts, new SecureRandom());
+		            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+		            HostnameVerifier allHostsValid = (hostname, session) -> true;
+		            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		            */
+
+		            connection = (HttpsURLConnection) url.openConnection();
+			} else {
+			    connection = (HttpURLConnection) url.openConnection();
+			}
 
 			connection.setRequestMethod("POST");
 			connection.setDoOutput(true);

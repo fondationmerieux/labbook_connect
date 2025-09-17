@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.7] - 2025-09-17
+### Added
+- send_hl7_msg is https compatible and non authorises self-signed certificates (possible to change this, but not secured)
+
+### Changed
+- adds port opening 12345
+
 ## [1.0.6] - 2025-07-17
 ### Fixed
 - send_hl7_msg
