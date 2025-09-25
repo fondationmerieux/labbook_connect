@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.8] - 2025-09-25
+### Changed
+- version number
+
 ## [1.0.7] - 2025-09-17
 ### Added
 - send_hl7_msg is https compatible and non authorises self-signed certificates (possible to change this, but not secured)
