@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.9] - 2025-10-22
+### Fixed
+- processes URLs from the list with or without the word “external”. Maintains compatibility with 3.5.x.
+
 ## [1.0.8] - 2025-09-25
 ### Changed
 - version number
