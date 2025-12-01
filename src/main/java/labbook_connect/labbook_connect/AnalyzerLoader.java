@@ -210,6 +210,12 @@ public class AnalyzerLoader {
 
 						if (existingAnalyzer != null) {
 							logger.info("DEBUG Updating existing analyzer " + plugin_name);
+							
+							if (existingAnalyzer.isListening()) {
+						        logger.info("DEBUG: Stopping existing listener for " + id_analyzer);
+						        existingAnalyzer.stopListening();
+						    }
+							
 							existingAnalyzer.setVersion(version);
 							existingAnalyzer.setUrl_upstream_lab27(url_lis + END_POINT_LAB27 + "/" + id_analyzer);
 							existingAnalyzer.setUrl_upstream_lab29(url_lis + END_POINT_LAB29 + "/" + id_analyzer);

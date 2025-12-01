@@ -44,7 +44,7 @@ public class MyResource {
     @Path("info/{id_analyzer}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getAnalyzerInfo(@PathParam("id_analyzer") String id_analyzer) {
-        logger.info("WS info called for id_analyzer={}", id_analyzer);
+        logger.info("WS info called for id_analyzer={}", sanitizeForLog(id_analyzer));
 
         // Search for the corresponding analyzer in the list of loaded analyzers
         for (Analyzer analyzer : App.analyzers_loaded) {
@@ -61,7 +61,7 @@ public class MyResource {
     @Path("is_analyzer_loaded/{id_analyzer}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response isAnalyzerLoaded(@PathParam("id_analyzer") String id_analyzer) {
-        logger.info("WS isAnalyzerLoaded called with id_analyzer={}", id_analyzer);
+        logger.info("WS isAnalyzerLoaded called with id_analyzer={}", sanitizeForLog(id_analyzer));
 
         for (Analyzer analyzer : App.analyzers_loaded) {
             if (id_analyzer.equals(analyzer.getId_analyzer())) {
@@ -143,7 +143,7 @@ public class MyResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("HL7 input error").build();
         }
         
-        logger.info("WS lab28 called with id_analyzer={}, oml_o33: {}", id_analyzer, oml_o33);
+        logger.info("WS lab28 called with id_analyzer={}, oml_o33: {}", sanitizeForLog(id_analyzer), oml_o33);
 
         String orl_o34 = "";
 
@@ -159,7 +159,7 @@ public class MyResource {
             }
 
             if (orl_o34.isEmpty()) {
-                logger.error("WS lab28 - No analyzer found for id: {}", id_analyzer);
+                logger.error("WS lab28 - No analyzer found for id: {}", sanitizeForLog(id_analyzer));
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Analyzer not found for id: " + id_analyzer)
                         .build();
@@ -192,5 +192,22 @@ public class MyResource {
     public Response test_lab29(String oul_r22) {
         logger.info("WS test_lab29 called with oul_r22: {}", oul_r22);
         return Response.ok(oul_r22).build();
+    }
+    
+    private static String sanitizeForLog(String value) {
+        if (value == null) {
+            return "";
+        }
+
+        // Remove line breaks and other control characters
+        String cleaned = value.replaceAll("[\\r\\n\\t]", "_");
+
+        // Truncate to avoid dumping very long user data in logs
+        int maxLen = 100;
+        if (cleaned.length() > maxLen) {
+            cleaned = cleaned.substring(0, maxLen) + "...";
+        }
+
+        return cleaned;
     }
 }

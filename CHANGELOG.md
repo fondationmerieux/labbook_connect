@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.11] - 2025-12-01
+### Added
+- automatic stopListening() call before reloading an analyzer plugin
+
+## [1.0.10] - 2025-11-27
+### Changed
+- sanitized all user-controlled log inputs to prevent log-injection issues
+
 ## [1.0.10] - 2025-11-04
 ### Changed
 - version number

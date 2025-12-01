@@ -159,4 +159,9 @@ public interface Analyzer {
      * @return True if the analyzer is listening, false otherwise.
      */
     boolean isListening();
+    
+    /**
+     * Stops listening and releases sockets (server and client).
+     */
+    void stopListening();
 }

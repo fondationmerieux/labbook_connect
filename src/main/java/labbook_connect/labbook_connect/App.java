@@ -23,8 +23,8 @@ public class App {
 	
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 	
-	public static final String VERSION  = "1.0.10";
-	public static final int NUM_VERSION = 10010;
+	public static final String VERSION  = "1.0.11";
+	public static final int NUM_VERSION = 10011;
 	
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
 	public static List<Analyzer> analyzers_loaded = new ArrayList<Analyzer>();
@@ -59,16 +59,20 @@ public class App {
         
         context.addServlet(servletHolder, "/*");
 
-		/** RUN server */
-		try {
-			logger.info("START server on {}:{}", host, port);
-			server.start();
-			server.join();
-		} catch(Exception e) {
-			logger.error("ERROR RUN server: ", e);
-		} finally {
-			server.destroy();
-		}
+        /** RUN server */
+        try {
+            logger.info("START server on {}:{}", host, port);
+            server.start();
+            server.join();
+        } catch (InterruptedException e) {
+            // Restore interrupted state
+            Thread.currentThread().interrupt();
+            logger.error("Server thread interrupted: ", e);
+        } catch (Exception e) {
+            logger.error("ERROR RUN server: ", e);
+        } finally {
+            server.destroy();
+        }
 	}
 	
 	/**
