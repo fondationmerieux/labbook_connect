@@ -23,8 +23,8 @@ public class App {
 	
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 	
-	public static final String VERSION  = "1.0.11";
-	public static final int NUM_VERSION = 10011;
+	public static final String VERSION  = "1.0.12";
+	public static final int NUM_VERSION = 10012;
 	
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
 	public static List<Analyzer> analyzers_loaded = new ArrayList<Analyzer>();

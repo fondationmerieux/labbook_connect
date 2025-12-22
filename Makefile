@@ -22,7 +22,7 @@ DEVRUN_LOG_DIR?=$(shell pwd)/logs
 DEVRUN_WORKDIR?=/app
 # PHM 16/09/2025 for try : opening 12345
 # DEVRUN_GENERAL_OPTIONS=--rm --detach --name=$(CONTAINER_NAME) --publish=$(DEVRUN_HTTP):$(DEVRUN_HTTP)
-DEVRUN_GENERAL_OPTIONS=--rm --detach --name=$(CONTAINER_NAME) --publish=$(DEVRUN_HTTP):$(DEVRUN_HTTP) --publish=12345:12345
+DEVRUN_GENERAL_OPTIONS=--rm --detach --name=$(CONTAINER_NAME) --publish=$(DEVRUN_HTTP):$(DEVRUN_HTTP) --publish=12300-12399:12300-12399
 DEVRUN_ENV_OPTIONS=--tz=local --env TZ --env TERM --env LANG
 DEVRUN_VOLUME_OPTIONS=\
 --volume=$(DEVRUN_MAP_STORAGE) \

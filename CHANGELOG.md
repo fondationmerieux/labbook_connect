@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.12] - 2025-12-22
+### Added
+- analyzer mappingPath support (loaded from settings) and common TOML mapping loader in Connect_util
+
 ## [1.0.11] - 2025-12-01
 ### Added
 - automatic stopListening() call before reloading an analyzer plugin

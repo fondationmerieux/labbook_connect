@@ -155,6 +155,7 @@ public class AnalyzerLoader {
 		String version     = setting.getString("version");
 		String id_analyzer = setting.getString("analyzer.id") ;
 		String plugin_name = setting.getString("analyzer.plugin") ;
+		String mappingPath = setting.getString("analyzer.mapping", "");
 		String url_lis     = setting.getString("analyzer.url_lis") ;
 		String type_cnx    = setting.getString("analyzer.type_cnx") ;
 		String type_msg    = setting.getString("analyzer.type_msg") ;
@@ -217,6 +218,7 @@ public class AnalyzerLoader {
 						    }
 							
 							existingAnalyzer.setVersion(version);
+							existingAnalyzer.setMappingPath(mappingPath);
 							existingAnalyzer.setUrl_upstream_lab27(url_lis + END_POINT_LAB27 + "/" + id_analyzer);
 							existingAnalyzer.setUrl_upstream_lab29(url_lis + END_POINT_LAB29 + "/" + id_analyzer);
 							existingAnalyzer.setType_cnx(type_cnx);
@@ -240,6 +242,7 @@ public class AnalyzerLoader {
 							newAnalyzer.setVersion(version);
 							logger.info("DEBUG: Set version={} for analyzer {}", version, id_analyzer);
 							newAnalyzer.setId_analyzer(id_analyzer);
+							newAnalyzer.setMappingPath(mappingPath);
 							newAnalyzer.setUrl_upstream_lab27(url_lis + END_POINT_LAB27 + "/" + id_analyzer);
 							newAnalyzer.setUrl_upstream_lab29(url_lis + END_POINT_LAB29 + "/" + id_analyzer);
 							newAnalyzer.setType_cnx(type_cnx);

@@ -27,6 +27,8 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moandjiezana.toml.Toml;
+
 /**
  * This class provides functions defined in the Connect module.
  */
@@ -236,5 +238,37 @@ public class Connect_util {
 		} catch (Exception e) {
 			logger.error("ERROR Lab Archive unexpected : {}", e.getMessage(), e);
 		}
+	}
+	
+	/**
+	 * Loads a TOML mapping file from the given path.
+	 * If the file does not exist or cannot be read, an empty TOML object is returned.
+	 * @param mappingPath The mapping file path (with or without ".toml").
+	 * @return The parsed TOML object.
+	 */
+	public static Toml loadMappingToml(String mappingPath) {
+	    if (mappingPath == null || mappingPath.trim().isEmpty()) {
+	        logger.info("Mapping load: mappingPath empty");
+	        return new Toml();
+	    }
+
+	    try {
+	        Path p = Paths.get(mappingPath);
+	        if (!Files.exists(p) && !mappingPath.endsWith(".toml")) {
+	            p = Paths.get(mappingPath + ".toml");
+	        }
+
+	        if (!Files.exists(p) || !Files.isRegularFile(p)) {
+	            logger.info("Mapping load: file not found path={}", p.toString());
+	            return new Toml();
+	        }
+
+	        logger.info("Mapping load: OK path={}", p.toString());
+	        return new Toml().read(p.toFile());
+
+	    } catch (Exception e) {
+	        logger.error("Mapping load: ERROR path={} err={}", mappingPath, e.toString());
+	        return new Toml();
+	    }
 	}
 }

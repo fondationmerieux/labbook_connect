@@ -147,6 +147,18 @@ public interface Analyzer {
      * @return The LIS response.
      */
     String lab29(final String msg);
+    
+    /**
+     * Gets the mapping configuration path.
+     * @return The mapping configuration path.
+     */
+    String getMappingPath();
+
+    /**
+     * Sets the mapping configuration path.
+     * @param mappingPath The mapping configuration path.
+     */
+    void setMappingPath(String mappingPath);
 
     /**
      * Starts listening for messages from the analyzer.
