@@ -23,12 +23,27 @@ public class App {
 	
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 	
-	public static final String VERSION  = "1.0.12";
-	public static final int NUM_VERSION = 10012;
+	/** Current application version string. */
+	public static final String VERSION  = "1.0.13";
+	/** Numeric application version (used for comparisons). */
+	public static final int NUM_VERSION = 10013;
 	
+	/** Loaded analyzer plugin classes available in the runtime (from plugin JARs). */
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
+	/** Configured analyzer instances enabled via settings files. */
 	public static List<Analyzer> analyzers_loaded = new ArrayList<Analyzer>();
+	
+	/**
+	 * Default constructor.
+	 */
+	public App() {
+	    // default
+	}
 
+	/**
+	 * Starts the embedded HTTP server and initializes analyzers.
+	 * @param args Command-line arguments (unused).
+	 */
 	public static void main(String[] args) {
 		Date currentTimestamp = new Date();
 		logger.info("*** {} BEGIN App main version: {} ***", currentTimestamp, App.VERSION);
@@ -52,6 +67,8 @@ public class App {
 
 		/** INIT server */
 		Server server = new Server(serv_host);
+		
+		server.setStopAtShutdown(true);
 
 		ServletContextHandler context = new ServletContextHandler(server, "/");
 		
@@ -71,6 +88,11 @@ public class App {
         } catch (Exception e) {
             logger.error("ERROR RUN server: ", e);
         } finally {
+        	try {
+                server.stop();
+            } catch (Exception e) {
+                logger.error("ERROR stopping server: ", e);
+            }
             server.destroy();
         }
 	}

@@ -1,6 +1,6 @@
 # Project
 
-LabBook Connect is a compagnon project to [LabBook](https://www.lab-book.org/en/).
+LabBook Connect is a companion project to [LabBook](https://www.lab-book.org/en/).
 
 The long term goal of the project is to be able to manage all the communication between LabBook and other healthcare informatics systems.
 
@@ -15,12 +15,12 @@ It exchanges HL7v2 messages over HTTP with upstream systems like LabBook on one 
 On the other side, it delegates the handling of the HL7v2 messages to plugins, one plugin for each supported type of analyzer.
 The plugins are in charge of converting the HL7v2 messages to whatever dialect the analyzer speaks.
 Each plugin comes in the form of a java archive .jar file.
-On startup, LabBook Connect searchs for available plugins and runs them.
+On startup, LabBook Connect searches for available plugins and runs them.
 
 For now, LabBook Connect doesn't implement any mapping.
 The codes in the HL7v2 messages must be those expected by the targeted analyzer.
 
-LabBook Connect is developped in java.
+LabBook Connect is developed in java.
 
 This repository contains the material needed to build the LabBook Connect container image.
 
@@ -79,7 +79,7 @@ in the 3 transactions that constitute the IHE-LAW profile: LAB-27, LAB-28 and LA
 
 ### [LAB-27]
 
-LabBook Connect is the client, sends POST messages to an upstrean URL,
+LabBook Connect is the client, sends POST messages to an upstream URL,
 
 ![LAB-27 diagram image](doc/lab27.png)
 

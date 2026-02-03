@@ -36,9 +36,19 @@ public class Connect_util {
 
 	private static final Logger logger = LoggerFactory.getLogger(Connect_util.class);
 
-	public static final int START_MSG_MLLP = 0x0B; // MLLP Start Block
-	public static final int END_MSG_MLLP = 0x1C;   // MLLP End Block
-	public static final int CARRIAGE_RETURN = 0x0D; // Final Carriage Return
+	/** MLLP start block character. */
+	public static final int START_MSG_MLLP = 0x0B;
+	/** MLLP end block character. */
+	public static final int END_MSG_MLLP = 0x1C;
+	/** Carriage return delimiter used by HL7 v2 segments. */
+	public static final int CARRIAGE_RETURN = 0x0D;
+	
+	/**
+	 * Utility class; not meant to be instantiated.
+	 */
+	private Connect_util() {
+	    // utility
+	}
 
 	/**
 	 * Reads an HL7 message encapsulated in MLLP format from an InputStream.

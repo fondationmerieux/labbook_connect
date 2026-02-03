@@ -20,6 +20,9 @@ import com.moandjiezana.toml.Toml;
 
 import plugin.Analyzer;
 
+/**
+ * Loads analyzer plugins (JAR) and their TOML settings, then instantiates and configures analyzers in Connect.
+ */
 public class AnalyzerLoader {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AnalyzerLoader.class);
@@ -28,7 +31,18 @@ public class AnalyzerLoader {
 	private static final String END_POINT_LAB29 = "/services/external/device/analyzer/lab29";
 
 	private List<Analyzer> analyzers = new ArrayList<Analyzer>();
+	
+	/**
+	 * Default constructor.
+	 */
+	public AnalyzerLoader() {
+	    // default
+	}
 
+	/**
+	 * Scans the plugin directory and loads analyzer classes from JAR files.
+	 * @return List of instantiated analyzer plugin classes.
+	 */
 	public List<Analyzer> loadAnalyzerClasses() {
 		String directoryPath = "/storage/resource/connect/analyzer/plugin";
 		
@@ -51,6 +65,9 @@ public class AnalyzerLoader {
 		return analyzers;
 	}
 	
+	/**
+	 * Loads a single analyzer plugin from a JAR and instantiates the corresponding plugin.* class.
+	 */
 	@SuppressWarnings("deprecation")
 	private void loadPlugin(Path file)
 	{
@@ -96,6 +113,10 @@ public class AnalyzerLoader {
 		}
 	}
 	
+	/**
+	 * Loads analyzer plugin classes, then parses settings files to create or update loaded analyzers.
+	 * @return Number of analyzers currently loaded.
+	 */
 	public int loadAnalyzers()
 	{
 		// LOAD all classes of analyzers jar plugins
@@ -146,6 +167,9 @@ public class AnalyzerLoader {
 		return nb_analyzers_loaded;
 	}
 
+	/**
+	 * Parses one analyzer TOML settings file and creates or updates the corresponding analyzer instance.
+	 */
 	private static void parse_setting(Path file)
 	{
 		logger.info("DEBUG parse setting file : " + file.getFileName());
@@ -273,7 +297,7 @@ public class AnalyzerLoader {
 	}
 	
 	/**
-	 * Creating directories for a specific analyzer
+	 * Creates runtime directories for a specific analyzer instance.
 	 */
 	private static void createAnalyzerDirectories(String id_analyzer) {
 	    Path dir_analyzer = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer);
@@ -309,7 +333,7 @@ public class AnalyzerLoader {
 	}
 	
 	/**
-	 * Function to create a directory with specific permissions
+	 * Creates a directory (if missing) and applies POSIX permissions.
 	 */
 	private static void createDirectoryWithPermissions(Path dir, Set<PosixFilePermission> permissions) throws IOException {
 	    if (!Files.exists(dir)) {

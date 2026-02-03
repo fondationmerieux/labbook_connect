@@ -90,61 +90,58 @@ public interface Analyzer {
     void setPort_analyzer(int port_analyzer);
 
     /**
-     * Creates a new instance of this class.
+     * Creates a configured copy of this analyzer instance.
      * @return A copy of the current analyzer.
      */
     Analyzer copy();
 
     /**
-     * Returns the name of this plugin.
-     * @return The plugin name.
+     * Returns the plugin name identifier (used by settings key analyzer.plugin).
+     * @return Plugin identifier string.
      */
     String test();
-    
+
     /**
-     * Returns detailed information about the analyzer.
-     *
-     * @return String containing version, id_analyzer, connection details, and configuration.
+     * Returns a human-readable summary of the analyzer configuration and state.
+     * @return Human-readable information string.
      */
     String info();
 
     /**
-     * Handles the Query for AWOS [LAB-27] IHE transaction.
-     * Some analyzers do not issue queries; in this case, this method can remain empty.
-     * - Waits for a query from the analyzer and converts it into an HL7 message (OBP_Q11).
-     * - Sends it over HTTP to url_upstream_lab27.
-     * - Waits for the HTTP response (RSP_K11).
-     * - Converts the RSP_K11 message into a format understood by the analyzer.
-     * - Sends the message to the analyzer.
+     * Handles the IHE LAB-27 query transaction.
+     * Typical flow (may vary depending on analyzer implementation):
+     * - Receives or builds a query and converts it into HL7 QBP^Q11.
+     * - Sends it to the upstream LIS endpoint (url_upstream_lab27).
+     * - Receives an HL7 RSP^K11 response.
+     * - Converts the response into the analyzer-specific format and sends it to the analyzer.
      *
-     * @param msg The HL7 message.
-     * @return The response from the LIS.
+     * @param msg HL7 message payload.
+     * @return HL7 response message.
      */
     String lab27(final String msg);
 
     /**
-     * Handles the AWOS Broadcast [LAB-28] IHE transaction.
-     * - Receives an HL7 OML_O33 message from an HTTP POST request.
-     * - Converts the HL7 message into a format understood by the analyzer.
-     * - Sends it to the analyzer and waits for a response.
-     * - Converts the response into an HL7 ORL_O34 message.
-     * - Returns the ORL_O34 message as a string.
+     * Handles the IHE LAB-28 order broadcast transaction.
+     * Typical flow:
+     * - Receives an HL7 OML^O33 message from upstream.
+     * - Converts it into the analyzer-specific format and sends it to the analyzer.
+     * - Receives analyzer response and converts it to HL7 ORL^O34.
      *
-     * @param str_OML_O33 The HL7 OML_O33 message.
-     * @return The ORL_O34 response message.
+     * @param str_OML_O33 HL7 OML^O33 message.
+     * @return HL7 ORL^O34 response message.
      */
     String lab28(final String str_OML_O33);
 
     /**
-     * Handles the AWOS Status Change [LAB-29] IHE transaction.
-     * - Waits for a status change from the analyzer and converts it into an HL7 OUL_R22 message.
-     * - Sends it over HTTP to url_upstream_lab29.
-     * - Waits for an HL7 ACK_R22 response.
-     * - Converts the ACK_R22 message into a format understood by the analyzer.
-     * - Sends the message to the analyzer.
+     * Handles the IHE LAB-29 status change transaction.
+     * Typical flow:
+     * - Receives a status change from the analyzer and converts it into HL7 OUL^R22.
+     * - Sends it to the upstream LIS endpoint (url_upstream_lab29).
+     * - Receives an HL7 acknowledgement/response.
+     * - Converts it into the analyzer-specific format and sends it back to the analyzer if applicable.
      *
-     * @param msg The HL7 message.
-     * @return The LIS response.
+     * @param msg HL7 message payload.
+     * @return HL7 response/acknowledgement message.
      */
     String lab29(final String msg);
     
