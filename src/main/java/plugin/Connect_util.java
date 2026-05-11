@@ -80,7 +80,7 @@ public class Connect_util {
 			}
 		}
 
-		String receivedHL7 = messageBuffer.toString(StandardCharsets.UTF_8).trim();
+		String receivedHL7 = messageBuffer.toString(StandardCharsets.UTF_8);
 
 		// Log the received message only if it contains valid data
 		if (!receivedHL7.isEmpty()) {

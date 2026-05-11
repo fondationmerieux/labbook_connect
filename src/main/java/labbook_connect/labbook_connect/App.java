@@ -24,9 +24,9 @@ public class App {
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 	
 	/** Current application version string. */
-	public static final String VERSION  = "1.0.13";
+	public static final String VERSION  = "1.0.14";
 	/** Numeric application version (used for comparisons). */
-	public static final int NUM_VERSION = 10013;
+	public static final int NUM_VERSION = 10014;
 	
 	/** Loaded analyzer plugin classes available in the runtime (from plugin JARs). */
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
