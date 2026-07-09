@@ -4,14 +4,23 @@ FULL_IMAGE_NAME=$(REGISTRY_NAME)/$(IMAGE_NAME)
 DOCKER_COMMAND=podman
 SAVE_DIR=/tmp
 DEFAULT_URL_PREFIX=/connect
+CONFIG_DIR=$(HOME)/.config
+CONFIG_FILENAME=labbook.conf
+CONFIG_PATH1=$(CONFIG_DIR)/$(CONFIG_FILENAME)
+CONFIG_PATH2=$(HOME)/$(CONFIG_FILENAME)
 
 # TODO
 # - add LOGLEVEL setup
-# - add map to storage volume if running with LabBook
 
 DEFAULT_VERSION=$(shell grep " \<VERSION\> " src/main/java/labbook_connect/labbook_connect/App.java | sed -e 's/^.*VERSION\s\+=\s\+"//' | sed -e 's/".*$$//')
 
-# $(info DEFAULT_VERSION=$(DEFAULT_VERSION))
+ifneq ("$(wildcard $(CONFIG_PATH1))","")
+include $(CONFIG_PATH1)
+else ifneq ("$(wildcard $(CONFIG_PATH2))","")
+include $(CONFIG_PATH2)
+endif
+
+$(info DEFAULT_VERSION=$(DEFAULT_VERSION) DEVRUN_STORAGE=$(DEVRUN_STORAGE) DEVRUN_LOG_DIR=$(DEVRUN_LOG_DIR) DEVRUN_WORKDIR=$(DEVRUN_WORKDIR))
 
 CONTAINER_NAME=labbook_connect
 DEVRUN_HTTP=8080
@@ -101,7 +110,6 @@ devclean:
 devrun:
 	mkdir -p $(DEVRUN_LOG_DIR)
 	mkdir -p $(DEVRUN_STORAGE)
-	rsync -a ./storage/ $(DEVRUN_STORAGE)
 	$(DOCKER_COMMAND) run $(DEVRUN_GENERAL_OPTIONS) $(DEVRUN_ENV_OPTIONS) $(DEVRUN_VOLUME_OPTIONS) $(FULL_IMAGE_NAME):latest
 
 .PHONY: devstop

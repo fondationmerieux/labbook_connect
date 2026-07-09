@@ -125,6 +125,51 @@ Expected result:
 Rsrc-Class-Path: ./ jetty-server-11.0.18.jar ...
 ```
 
+## 10) Configure shared storage with LabBook
+
+LabBook Connect uses the `/storage` volume inside the container.
+
+When running LabBook and LabBook Connect together, both applications must use the same storage directory.
+
+The storage directory used by the development containers is configured with:
+
+```text
+DEVRUN_STORAGE
+```
+
+This variable is defined in the `labbook.conf` file.
+
+Example with a shared LabBook storage:
+
+```text
+DEVRUN_STORAGE=/home/sigl/labbook_python/devrun_storage
+```
+
+With this configuration, LabBook Connect and LabBook use the same analyzer resources:
+
+```text
+/storage/resource/connect/analyzer/
+```
+
+Example structure:
+
+```text
+resource/
+└── connect/
+    └── analyzer/
+        ├── plugin/
+        │   └── AnalyzerGeneXpert.jar
+        ├── setting/
+        └── mapping/
+```
+
+Then build and start LabBook Connect:
+
+```bash
+make devbuild
+make devrun
+```
+
 ## Result
 
 The generated file:
