@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class MyResource {
         logger.info("WS isAnalyzerLoaded called with id_analyzer={}", sanitizeForLog(id_analyzer));
 
         for (Analyzer analyzer : App.analyzers_loaded) {
-            if (id_analyzer.equals(analyzer.getId_analyzer())) {
+        	if (Objects.equals(id_analyzer, analyzer.getId_analyzer())) {
                 JsonObject response = Json.createObjectBuilder()
                         .add("status", "OK")
                         .add("message", "Analyzer is loaded.")
