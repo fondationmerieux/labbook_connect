@@ -111,6 +111,10 @@ public class Connect_util {
 	 */
 	@SuppressWarnings("deprecation")
 	public static String send_hl7_msg(Analyzer analyzer, String url_upstream, String hl7_msg) {
+		// [2026-08-26] tag log lines with the analyzer id
+		final String analyzerId = (analyzer == null || analyzer.getId_analyzer() == null)
+				? "unknown" : analyzer.getId_analyzer();
+
 		String currentUrl = url_upstream;               // first try: as-is
 		for (int attempt = 0; attempt < 2; attempt++) { // second try: drop /external if 404
 			try {
@@ -130,7 +134,7 @@ public class Connect_util {
 				connection.setReadTimeout(15000);
 				connection.setRequestProperty("Content-Type", "application/hl7-v2");
 
-				logger.info("Sending HL7 payload to {}:\n{}", currentUrl, hl7_msg);
+				logger.info("[{}] Sending HL7 payload to {}:\n{}", analyzerId, currentUrl, hl7_msg);
 
 				// send body
 				try (OutputStream os = connection.getOutputStream()) {
@@ -150,8 +154,8 @@ public class Connect_util {
 					}
 					String body = bout.toString(StandardCharsets.UTF_8.name()).trim();
 
-					logger.info("Upstream HTTP {} from {} ; first80='{}'",
-							code, currentUrl, body.substring(0, Math.min(80, body.length())).replace("\r","\\r"));
+					logger.info("[{}] Upstream HTTP {} from {} ; first80='{}'",
+							analyzerId, code, currentUrl, body.substring(0, Math.min(80, body.length())).replace("\r","\\r"));
 
 					// If 404 on first attempt and URL contains /services/external/, retry once without it.
 					if (code == 404 && attempt == 0 && currentUrl.contains("/services/external/")) {
@@ -175,16 +179,16 @@ public class Connect_util {
 					currentUrl = nextUrl;
 					continue;
 				}
-				logger.error("Network error while sending HL7 message: {}", e.toString(), e);
+				logger.error("[{}] Network error while sending HL7 message: {}", analyzerId, e.toString(), e);
 				return "ERROR send_hl7_msg Network : " + currentUrl + " -> " + e.toString();
 
 			} catch (IOException e) {
-				logger.error("Network error while sending HL7 message: {}", e.getMessage(), e);
+				logger.error("[{}] Network error while sending HL7 message: {}", analyzerId, e.getMessage(), e);
 				// no special retry except the 404 case above
 				return "ERROR send_hl7_msg Network : " + currentUrl + " -> " + e.getMessage();
 
 			} catch (Exception e) {
-				logger.error("General Error during HL7 message transmission: {}", e.getMessage(), e);
+				logger.error("[{}] General Error during HL7 message transmission: {}", analyzerId, e.getMessage(), e);
 				return "ERROR send_hl7_msg HTTP connection : " + e.getMessage();
 			}
 		}

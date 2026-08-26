@@ -24,7 +24,30 @@
             </plugin>
         </plugins>
     </build>
-    
+
+    <!--
+        [2026-08-26] Align all Jetty artifact versions.
+
+        jetty-webapp and jetty-xml are not declared explicitly below. They are
+        pulled in transitively by Jersey, which brings its own versions
+        (11.0.15 while the rest of the project is on 11.0.18). Changing
+        <jetty.version> therefore had no effect on them.
+
+        The Jetty BOM forces every org.eclipse.jetty artifact to use
+        ${jetty.version}, including the ones pulled in transitively.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-bom</artifactId>
+                <version>${jetty.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -84,7 +107,7 @@
     	<dependency>
         	<groupId>ch.qos.logback</groupId>
         	<artifactId>logback-classic</artifactId>
-        	<version>1.4.11</version>
+        	<version>1.4.14</version>
     	</dependency>
 		
 		<!-- TOML -->
@@ -110,7 +133,7 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty.version>11.0.18</jetty.version>
+		<jetty.version>11.0.25</jetty.version>
 		<jersey.version>3.1.3</jersey.version>
 	</properties>
     

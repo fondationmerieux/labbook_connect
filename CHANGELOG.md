@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.15] - 2026-08-26
+### Security
+- Jetty 11.0.18 -> 11.0.25 and logback 1.4.11 -> 1.4.14 (Dependabot alerts)
+### Changed
+- send_hl7_msg now prefixes its log lines with the analyzer id
+- target/ is no longer tracked in git (build output)
+
 ## [1.0.14] - 2026-05-11
 ### Fixed
 - MLLP HL7 message trimming issue causing segment corruption
