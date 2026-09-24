@@ -55,13 +55,14 @@ public class Connect_util {
 	 * This method ensures that only valid messages are processed.
 	 *
 	 * @param inputStream The input stream to read from.
-	 * @return The extracted HL7 message, or an empty string if no message is available.
+	 * @return The extracted HL7 message, or null when the peer closed the connection.
 	 * @throws IOException If an error occurs during reading.
 	 */
 	public static String readMLLPMessage(InputStream inputStream) throws IOException {
 		ByteArrayOutputStream messageBuffer = new ByteArrayOutputStream();
 		int byteRead;
 		boolean started = false;
+		boolean complete = false;
 
 		while ((byteRead = inputStream.read()) != -1) {
 			if (byteRead == START_MSG_MLLP) { 
@@ -73,11 +74,19 @@ public class Connect_util {
 				if (nextByte != CARRIAGE_RETURN) {
 					logger.warn("Expected final carriage return but got: {}", nextByte);
 				}
+				complete = true;
 				break;
 			}
 			if (started) {
 				messageBuffer.write(byteRead);
 			}
+		}
+
+		// The loop ended without an end marker: the peer closed the connection. Callers watch
+		// for null to leave their read loop, an empty string would make them spin on a dead
+		// socket instead of going back to waiting for the next connection.
+		if (!complete) {
+			return null;
 		}
 
 		String receivedHL7 = messageBuffer.toString(StandardCharsets.UTF_8);

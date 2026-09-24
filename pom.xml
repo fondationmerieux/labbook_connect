@@ -28,19 +28,28 @@
     <!--
         [2026-08-26] Align all Jetty artifact versions.
 
-        jetty-webapp and jetty-xml are not declared explicitly below. They are
-        pulled in transitively by Jersey, which brings its own versions
-        (11.0.15 while the rest of the project is on 11.0.18). Changing
-        <jetty.version> therefore had no effect on them.
-
         The Jetty BOM forces every org.eclipse.jetty artifact to use
         ${jetty.version}, including the ones pulled in transitively.
+
+        [2026-09-22] Jetty 11 -> 12, the Jetty 11 branch is no longer
+        maintained (last release 11.0.26, August 2025).
+
+        Jetty 12 serves several generations of the servlet specification side
+        by side, one set of artifacts per generation. The ee10 set implements
+        Jakarta EE 10 (servlet 6), hence jetty-ee10-servlet and its own BOM.
     -->
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-bom</artifactId>
+                <version>${jetty.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-bom</artifactId>
                 <version>${jetty.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -52,32 +61,24 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-io</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-util</artifactId>
-			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>${jetty.version}</version>
+			<groupId>org.eclipse.jetty.ee10</groupId>
+			<artifactId>jetty-ee10-servlet</artifactId>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-jetty-http</artifactId>
-			<version>${jersey.version}</version>
-		</dependency>
+
+		<!-- Generic servlet container, the one App uses through ServletContainer -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-jetty-servlet</artifactId>
+			<artifactId>jersey-container-servlet</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
 		<dependency>
@@ -133,8 +134,8 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty.version>11.0.25</jetty.version>
-		<jersey.version>3.1.3</jersey.version>
+		<jetty.version>12.1.13</jetty.version>
+		<jersey.version>3.1.12</jersey.version>
 	</properties>
     
 </project>

@@ -1,8 +1,15 @@
 <configuration>
 
     <!-- Define log format -->
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <!-- Weekly rotation, 180 weeks kept, as LabBook does -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/labbook_connect.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/labbook_connect.%d{yyyy-ww}.%i.log.gz</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>180</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} | %logger{0} | Line:%L | %msg%n</pattern>
         </encoder>

@@ -3,9 +3,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.16] - 2026-09-22
+### Security
+- Jetty 11.0.25 -> 12.1.13 and Jersey 3.1.3 -> 3.1.12, the Jetty 11 branch is no longer
+  maintained (last release 11.0.26, August 2025)
+
+### Changed
+- Log timestamps follow the clock of the machine instead of UTC
+- Log file rotated weekly and compressed, 180 weeks kept, as LabBook does
+- Log lines are no longer written twice, duplicated and interleaved
+
+### Fixed
+- A closed connection left the HL7 plugins spinning on a dead socket instead of waiting
+  for the next one, at full CPU, until Connect was restarted
+
 ## [1.0.15] - 2026-08-26
 ### Security
 - Jetty 11.0.18 -> 11.0.25 and logback 1.4.11 -> 1.4.14 (Dependabot alerts)
+
 ### Changed
 - send_hl7_msg now prefixes its log lines with the analyzer id
 - target/ is no longer tracked in git (build output)

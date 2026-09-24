@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
@@ -24,9 +24,9 @@ public class App {
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 	
 	/** Current application version string. */
-	public static final String VERSION  = "1.0.15";
+	public static final String VERSION  = "1.0.16";
 	/** Numeric application version (used for comparisons). */
-	public static final int NUM_VERSION = 10015;
+	public static final int NUM_VERSION = 10016;
 	
 	/** Loaded analyzer plugin classes available in the runtime (from plugin JARs). */
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
@@ -70,7 +70,10 @@ public class App {
 		
 		server.setStopAtShutdown(true);
 
-		ServletContextHandler context = new ServletContextHandler(server, "/");
+		/** Since Jetty 12 the context no longer takes the server as a parameter */
+		ServletContextHandler context = new ServletContextHandler("/");
+
+		server.setHandler(context);
 		
 		ServletHolder servletHolder = new ServletHolder(new ServletContainer(config));
         

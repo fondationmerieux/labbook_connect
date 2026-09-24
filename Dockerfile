@@ -10,4 +10,5 @@ RUN mkdir -p /app/logs
 COPY /bin/labbook_connect.jar /app/labbook_connect.jar
 
 # Command to launch application on container startup
-CMD ["sh", "-c", "java -jar labbook_connect.jar > logs/labbook_connect.log 2>&1"]
+# Java needs the timezone name, which podman does not provide, so it is looked up
+CMD ["sh", "-c", "TZ=${TZ:-$(find /usr/share/zoneinfo -type f -not -path '*/posix/*' -not -path '*/right/*' -not -path '*/Etc/*' -exec cmp -s /etc/localtime {} \\; -print | head -n1 | sed 's|/usr/share/zoneinfo/||')}; export TZ; java -jar labbook_connect.jar"]
