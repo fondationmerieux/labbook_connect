@@ -76,6 +76,6 @@ wget -qO- http://localhost:8080/connect/test              # version du moteur
 wget -qO- http://localhost:8080/connect/info/GX_01        # versions du plugin et du réglage
 ```
 
-L'environnement de référence est **Java 21** (image `eclipse-temurin:21`), avec les
+L'environnement de référence est **Java 21** (image `sapmachine:21`), avec les
 bibliothèques figées listées au chapitre
 [01](01-environnement-et-construction.md#les-bibliothèques-tierces).

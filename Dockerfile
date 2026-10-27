@@ -1,4 +1,7 @@
-FROM eclipse-temurin:21
+FROM sapmachine:21
+
+# SapMachine ships without tzdata, needed by the timezone lookup in CMD
+RUN apt-get update && apt-get install -y --no-install-recommends tzdata && rm -rf /var/lib/apt/lists/*
 
 # Define the working directory in the container
 WORKDIR /app

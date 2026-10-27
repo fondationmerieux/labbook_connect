@@ -2,14 +2,15 @@
 
 ## Un conteneur volontairement minuscule
 
-Le `Dockerfile` de Connect tient en cinq instructions :
+Le `Dockerfile` de Connect tient en six instructions :
 
 ```dockerfile
-FROM eclipse-temurin:21
+FROM sapmachine:21
+RUN apt-get update && apt-get install -y --no-install-recommends tzdata && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 RUN mkdir -p /app/logs
 COPY /bin/labbook_connect.jar /app/labbook_connect.jar
-CMD ["sh", "-c", "java -jar labbook_connect.jar > logs/labbook_connect.log 2>&1"]
+CMD ["sh", "-c", "TZ=${TZ:-$(find /usr/share/zoneinfo -type f -not -path '*/posix/*' -not -path '*/right/*' -not -path '*/Etc/*' -exec cmp -s /etc/localtime {} \\; -print | head -n1 | sed 's|/usr/share/zoneinfo/||')}; export TZ; java -jar labbook_connect.jar"]
 ```
 
 Rien de plus. Là où l'image du LIS part d'une distribution Linux complète et y ajoute
@@ -26,7 +27,9 @@ Cette frugalité a des conséquences pratiques :
 
 > **Piège — l'image de base peut disparaître.** Le projet utilisait à l'origine une image
 > `openjdk:21` ; elle a cessé d'être publiée quand l'éditeur est passé aux versions
-> suivantes. Il a fallu basculer vers `eclipse-temurin:21`, un équivalent libre. Le
+> suivantes. Il a fallu basculer vers `eclipse-temurin:21`, un équivalent libre. En
+> octobre 2026, passage à `sapmachine:21`, Temurin tardant à retirer une autorité eMudhra
+> compromise. SapMachine ne fournit pas `tzdata`, que le Dockerfile installe. Le
 > problème peut se reproduire : tant que l'image est déjà présente sur votre machine,
 > `make devbuild` réussit et vous ne voyez rien ; le jour où vous construisez sur une
 > machine vierge, la construction échoue à la première ligne. Cette dépendance à un
