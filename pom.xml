@@ -118,7 +118,7 @@
     		<version>0.7.2</version>
 		</dependency>
 		
-		<!-- HAPI -->
+		<!-- HAPI HL7v2, used by the analyzer plugins -->
 		<dependency>
     	    <groupId>ca.uhn.hapi</groupId>
     		<artifactId>hapi-base</artifactId>
@@ -129,6 +129,17 @@
     		<artifactId>hapi-structures-v251</artifactId>
     		<version>2.2</version>
 		</dependency>
+		<!-- HAPI FHIR, R4 resources and the Plain Server of the FHIR facade -->
+		<dependency>
+    	    <groupId>ca.uhn.hapi.fhir</groupId>
+    		<artifactId>hapi-fhir-structures-r4</artifactId>
+    		<version>${hapi.fhir.version}</version>
+		</dependency>
+		<dependency>
+    	    <groupId>ca.uhn.hapi.fhir</groupId>
+    		<artifactId>hapi-fhir-server</artifactId>
+    		<version>${hapi.fhir.version}</version>
+		</dependency>
 		
 	</dependencies>
 	
@@ -136,6 +147,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty.version>12.1.13</jetty.version>
 		<jersey.version>3.1.12</jersey.version>
+		<hapi.fhir.version>8.12.1</hapi.fhir.version>
 	</properties>
     
 </project>

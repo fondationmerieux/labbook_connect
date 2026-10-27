@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.0] - 2026-10-26
+### Added
+- FHIR facade, first part of the OpenMRS exchange, inactive without its setting file
+- FHIR R4 facade on /fhir, HAPI FHIR 8.12.1 in Plain Server mode
+- Patient read and search on /fhir/Patient, built from the LabBook external API
+- Record creation from a FHIR transaction Bundle
+- Setting external.system_name, name of the calling system
+- Analysis taken from its LOINC code, LabBook code only on system urn:labbook:analysis-code
+- Only an active ServiceRequest creates a record, a cancelled one is ignored
+- Service /connect/test_fhir, checks that the facade obtains a token from LabBook
+
 ## [1.0.16] - 2026-09-22
 ### Security
 - Jetty 11.0.25 -> 12.1.13 and Jersey 3.1.3 -> 3.1.12, the Jetty 11 branch is no longer

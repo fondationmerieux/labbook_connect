@@ -14,6 +14,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import labbook_connect.fhir.FhirServer;
+import labbook_connect.fhir.LabBookClient;
 import plugin.Analyzer;
 
 /**
@@ -24,14 +26,16 @@ public class App {
 	private static final Logger logger = LoggerFactory.getLogger(App.class);
 	
 	/** Current application version string. */
-	public static final String VERSION  = "1.0.16";
+	public static final String VERSION  = "1.1.0";
 	/** Numeric application version (used for comparisons). */
-	public static final int NUM_VERSION = 10016;
+	public static final int NUM_VERSION = 10100;
 	
 	/** Loaded analyzer plugin classes available in the runtime (from plugin JARs). */
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
 	/** Configured analyzer instances enabled via settings files. */
 	public static List<Analyzer> analyzers_loaded = new ArrayList<Analyzer>();
+	/** Client of the LabBook API used by the FHIR facade, settings read at startup. */
+	public static LabBookClient labbook_client = new LabBookClient();
 	
 	/**
 	 * Default constructor.
@@ -78,6 +82,9 @@ public class App {
 		ServletHolder servletHolder = new ServletHolder(new ServletContainer(config));
         
         context.addServlet(servletHolder, "/*");
+
+        /** FHIR facade: the longest path prefix wins over the Jersey catch-all */
+        context.addServlet(new ServletHolder(new FhirServer(labbook_client)), "/fhir/*");
 
         /** RUN server */
         try {

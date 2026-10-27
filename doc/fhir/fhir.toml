@@ -1,0 +1,22 @@
+# FHIR Facade Configuration File
+# Connection details from LabBook Connect to the LabBook external API.
+# This is a sample file, to be copied to /storage/resource/connect/fhir/fhir.toml
+# Without this file the FHIR facade answers that it is not configured,
+# and LabBook Connect keeps running with its analyzers.
+# The operator MUST set the real values before use.
+# This file holds a secret, keep it readable by its owner only (chmod 600).
+
+version = "1.0.0"  # Configuration file version
+
+[labbook]
+# LabBook base URL, as seen from inside the container: localhost is the container
+# itself, so a real deployment needs the address LabBook answers on
+url           = "http://localhost/sigl"
+client_id     = "CLIENT_ID_TO_ENTER"        # OAuth2 client declared in LabBook settings
+client_secret = "CLIENT_SECRET_TO_ENTER"    # OAuth2 client secret
+
+[external]
+# Short name LabBook keeps for the system that sends the requests. A FHIR system is
+# a URL, which the laboratory has no use for and which changes with the hosting of
+# the calling system. Left empty, the URL of the message is kept as it came.
+system_name   = "OPENMRS"

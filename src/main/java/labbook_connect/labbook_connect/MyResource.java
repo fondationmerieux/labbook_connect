@@ -151,6 +151,22 @@ public class MyResource {
     }
 
     /**
+     * Checks that the FHIR facade is ready, by asking LabBook for a token.
+     * @return One line, the state of the facade.
+     * */
+    @GET
+    @Path("test_fhir")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String test_fhir() {
+        logger.info("WS test_fhir called");
+
+        String ret = App.labbook_client.checkLabBookAccess();
+
+        logger.info("test_fhir = {}", ret);
+        return ret;
+    }
+
+    /**
      * Handles LAB-28 requests.
      * Expects a raw HL7 message encoded in UTF-8 and preserves segment delimiters (\r).
      * @param id_analyzer Analyzer identifier.
