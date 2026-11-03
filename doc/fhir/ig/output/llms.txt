@@ -1,0 +1,24 @@
+# labbook.connect.ig#0.1.0: LabBook Connect, FHIR Implementation Guide
+
+## Pages
+
+* [Home](index.md)
+* [The exchange](exchange.md)
+* [Artifacts Summary](artifacts.md)
+
+## Resources
+
+### Resource Profiles
+
+* [Requested analysis](StructureDefinition-labbook-analysis-request.md)
+* [LabBook patient](StructureDefinition-labbook-patient.md)
+* [Record request](StructureDefinition-labbook-record-task.md)
+
+### ImplementationGuides
+
+* [LabBook Connect, FHIR Implementation Guide](index.md)
+
+### Examples
+
+* [RecordRequestExample (Bundle)](Bundle-RecordRequestExample.md)
+* [LabBookPatientExample (Patient)](Patient-LabBookPatientExample.md)

@@ -1,0 +1,9 @@
+== Suppressed Messages ==
+
+# The canonical is an identifier, nothing is published at that address, so the publisher
+# cannot find a package list there.
+Error fetching package-list from http://fhir.labbook-connect/ig
+
+# The identifier systems of LabBook are ours, they are not published anywhere, so the
+# validator cannot resolve them.
+No definition could be found for URL value 'urn:labbook:patient-code'

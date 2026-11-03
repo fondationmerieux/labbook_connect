@@ -1,0 +1,20 @@
+{
+  "url" : "http://fhir.labbook-connect/ig/ImplementationGuide/labbook.connect.ig",
+  "name" : "LabBookConnectIG",
+  "title" : "LabBook Connect, FHIR Implementation Guide",
+  "description" : "How an outside system exchanges laboratory data with LabBook through the FHIR facade of LabBook Connect.",
+  "status" : "draft",
+  "package-id" : "labbook.connect.ig",
+  "ig-ver" : "0.1.0",
+  "date" : "Wed, 28 Oct, 2026 08:35:15 +0000",
+  "dateISO8601" : "2026-10-28T08:35:15+00:00",
+  "errs" : 0,
+  "warnings" : 12,
+  "hints" : 7,
+  "broken-links" : 0,
+  "suppressed-hints" : 0,
+  "suppressed-warnings" : 1,
+  "version" : "4.0.1",
+  "tool" : "6.0.0-snapshot1 (3)",
+  "maxMemory" : 630567784
+}

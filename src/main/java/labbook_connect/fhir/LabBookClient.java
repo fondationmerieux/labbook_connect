@@ -179,6 +179,36 @@ public class LabBookClient {
 	}
 
 	/**
+	 * Reads one service of the LabBook API and returns its answer as it came,
+	 * status code included, so that a caller can tell a missing record from a
+	 * failure.
+	 * @param path Service path under /services/external, starting with a slash,
+	 *             query string included when there is one.
+	 * @return The status code and the body sent by LabBook.
+	 */
+	public Answer getFromLabBookWithStatus(String path) {
+		if (!isConfigured()) {
+			throw new InternalErrorException("FHIR facade not configured, " + SETTING_FILE + " is missing or incomplete");
+		}
+
+		HttpResponse<String> response = sendToLabBook(path, null, accessToken());
+
+		/** An expired or revoked token is asked again once, then the call is replayed */
+		if (response.statusCode() == 401) {
+			logger.info("LabBook answered 401 on {}, asking for a new token", path);
+
+			synchronized (this) {
+				token       = null;
+				tokenExpiry = null;
+			}
+
+			response = sendToLabBook(path, null, accessToken());
+		}
+
+		return new Answer(response.statusCode(), response.body());
+	}
+
+	/**
 	 * One answer of the LabBook API.
 	 * @param status HTTP status code sent by LabBook.
 	 * @param body Answer body, as sent by LabBook.
@@ -187,18 +217,23 @@ public class LabBookClient {
 	}
 
 	/**
-	 * Sends one request to the LabBook API with the given token.
+	 * Sends one request to the LabBook API with the given token. A null body
+	 * means a GET, anything else a POST carrying that body.
 	 */
 	private HttpResponse<String> sendToLabBook(String path, String jsonBody, String bearer) {
-		HttpRequest request = HttpRequest.newBuilder(URI.create(url + EXTERNAL_ENDPOINT + path))
+		HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(url + EXTERNAL_ENDPOINT + path))
 				.header("Authorization", "Bearer " + bearer)
 				.header("Content-Type", "application/json")
 				.header("Accept", "application/json")
-				.timeout(Duration.ofSeconds(30))
-				.POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
-				.build();
+				.timeout(Duration.ofSeconds(30));
 
-		return send(request, path);
+		if (jsonBody == null) {
+			builder.GET();
+		} else {
+			builder.POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8));
+		}
+
+		return send(builder.build(), path);
 	}
 
 	/**

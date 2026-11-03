@@ -141,6 +141,8 @@ public class RecordTransactionProvider {
 					"This request has already been received by LabBook : " + reason(answer.body()));
 			case 400 -> throw new InvalidRequestException(
 					"LabBook refused the request : " + reason(answer.body()));
+			case 404 -> throw new InvalidRequestException(
+					"LabBook does not know this analysis : " + reason(answer.body()));
 			default  -> throw new InternalErrorException(
 					"LabBook answered HTTP " + answer.status() + " on " + SERVICE_RECORD_DET);
 		};
@@ -219,7 +221,7 @@ public class RecordTransactionProvider {
 		/** A request coming from outside is always of type External */
 		return Json.createObjectBuilder()
 				.add("rec_type",             "E")
-				.add("rec_date",             LocalDateTime.now().format(FORMAT_DATETIME))
+				.add("rec_date",             LocalDateTime.now(ZoneId.systemDefault()).format(FORMAT_DATETIME))
 				.add("rec_date_prescr",      prescribed)
 				.add("rec_num_int",          "")
 				.add("rec_custody",          "N")
@@ -359,10 +361,22 @@ public class RecordTransactionProvider {
 			system = client.externalSystem();
 		}
 
+		/**
+		 * Id of the Patient resource itself, the only reference a FHIR link can name.
+		 * The business number above is what the laboratory reads, this one is what the
+		 * calling system answers to.
+		 */
+		String patientResource = "";
+
+		if (patient.getIdElement() != null && patient.getIdElement().getIdPart() != null) {
+			patientResource = patient.getIdElement().getIdPart();
+		}
+
 		return Json.createObjectBuilder()
-				.add("system",  system)
-				.add("record",  record)
-				.add("patient", external);
+				.add("system",           system)
+				.add("record",           record)
+				.add("patient",          external)
+				.add("patient_resource", patientResource);
 	}
 
 	/**

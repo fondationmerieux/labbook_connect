@@ -1,0 +1,28 @@
+[{
+  "id" : "labbook.connect.ig",
+  "type" : "ImplementationGuide",
+  "url" : "http://fhir.labbook-connect/ig/ImplementationGuide/labbook.connect.ig",
+  "version" : "0.1.0",
+  "name" : "LabBookConnectIG"
+},
+{
+  "id" : "labbook-analysis-request",
+  "type" : "StructureDefinition",
+  "url" : "http://fhir.labbook-connect/ig/StructureDefinition/labbook-analysis-request",
+  "version" : "0.1.0",
+  "name" : "LabBookAnalysisRequest"
+},
+{
+  "id" : "labbook-patient",
+  "type" : "StructureDefinition",
+  "url" : "http://fhir.labbook-connect/ig/StructureDefinition/labbook-patient",
+  "version" : "0.1.0",
+  "name" : "LabBookPatient"
+},
+{
+  "id" : "labbook-record-task",
+  "type" : "StructureDefinition",
+  "url" : "http://fhir.labbook-connect/ig/StructureDefinition/labbook-record-task",
+  "version" : "0.1.0",
+  "name" : "LabBookRecordTask"
+}]

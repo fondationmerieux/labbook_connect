@@ -1,0 +1,7 @@
+# The built site, output/, is tracked on purpose, so that a clone can be read without
+# rebuilding it. Rebuild it only when something changed, every page carries the build date.
+fsh-generated/
+temp/
+template/
+input-cache/
+Requirements-fromNarrative.json

@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.1.0] - 2026-10-26
+## [1.1.0] - 2026-11-03
 ### Security
 - Base image eclipse-temurin:21 -> sapmachine:21, without the compromised eMudhra root
 
@@ -16,6 +16,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Analysis taken from its LOINC code, LabBook code only on system urn:labbook:analysis-code
 - Only an active ServiceRequest creates a record, a cancelled one is ignored
 - Service /connect/test_fhir, checks that the facade obtains a token from LabBook
+- Clear error when LabBook does not know the analysis code
+- Record request read on /fhir/Task, with the LabBook record status translated
+- Record requests changed since a date searched on /fhir/Task, as an outside system polls them
+- Validated results answered on /fhir/DiagnosticReport, one report per analysis, with its Observation
+- Reference of the patient resource of the calling system kept and used in the answers
+- Access log of the facade, caller address, identity, status and time taken, refused requests included
 
 ## [1.0.16] - 2026-09-22
 ### Security

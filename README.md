@@ -109,6 +109,16 @@ Please see the comments in the [file](src/main/java/plugin/Analyzer.java) for de
 The plugin can use the functions provided in the `src/main/java/plugin/Connect_util.java`
 [file](src/main/java/plugin/Connect_util.java) to communicate with LabBook Connect.
 
+# FHIR facade
+
+Besides the analyzers, LabBook Connect exposes a FHIR R4 facade on `/fhir`, through which an
+outside system such as OpenMRS reads patients and creates records in LabBook. It is inactive
+as long as its setting file is missing, and `doc/fhir/fhir.toml` is the example of that file.
+
+The LabBook field to FHIR element mapping is in `doc/fhir/mapping.md`, and the Implementation
+Guide, written in FSH, is in `doc/fhir/ig/` with its own
+[README](doc/fhir/ig/README.md) for building it.
+
 # Development environment
 
 The Eclipse 4.29.0 (2023-09) plugin and openjdk 21 were used for this project.

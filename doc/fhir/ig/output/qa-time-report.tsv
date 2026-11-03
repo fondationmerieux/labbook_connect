@@ -1,0 +1,14 @@
+Source File	Size	loadResources	load	generateSnapshots	load-configure	scan	loadDepInfo	loadInfo	checkR4R4B	generateNarratives	validate	loadLists	checkConformanceResources	checkConformanceResources2	checkConformanceResources3	generateLogicalMaps	validateExpressions	scanForUsageStats	checkURLsUnique	processProvenanceDetails	generate1	generate2	generateLogicals	makeDependencies	generateExampleZip	generateValidationPack	scanProfilesForR5	scanExamplesForR5
+/fsh-generated/resources/ImplementationGuide-labbook.connect.ig.json	2805	-	0	0	0	0	0	0	4	38	0	0	0	0	0	0	0	1	0	0	56	24	0	0	0	1	0	0
+fsh-generated/resources/Bundle-RecordRequestExample.json	2872	3	14	0	1	0	0	0	0	139	0	0	0	0	0	0	0	0	0	0	32	11	0	0	0	0	0	1
+fsh-generated/resources/Patient-LabBookPatientExample.json	453	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	26	3	0	0	0	0	0	0
+fsh-generated/resources/StructureDefinition-labbook-analysis-request.json	2624	1	0	29	0	0	0	0	0	36	0	0	0	0	0	0	0	1	0	0	175	578	0	0	0	6	0	0
+fsh-generated/resources/StructureDefinition-labbook-patient.json	3237	1	0	24	0	0	0	0	0	16	0	0	1	0	0	0	0	0	0	0	172	170	0	0	0	4	0	1
+fsh-generated/resources/StructureDefinition-labbook-record-task.json	1788	1	0	18	0	0	0	0	0	11	0	0	0	0	0	0	0	1	0	0	134	171	0	0	0	4	0	0
+/fsh-generated/includes/menu.xml	1102	-	-	-	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+/fsh-generated/includes/fsh-link-references.md	317	-	-	-	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+/input/pagecontent/exchange.md	2451	-	-	-	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0
+/input/pagecontent/index.md	869	-	-	-	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+/template/config	0	-	-	-	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+/template/config/_config.yml	140	-	-	-	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+/temp/pages/_includes/artifacts.xml	3634	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	0	0	0	0	0	0	0

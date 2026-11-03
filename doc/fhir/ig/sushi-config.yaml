@@ -1,0 +1,24 @@
+# Source of the LabBook Connect FHIR Implementation Guide, compiled by SUSHI.
+id: labbook.connect.ig
+canonical: http://fhir.labbook-connect/ig
+name: LabBookConnectIG
+title: "LabBook Connect, FHIR Implementation Guide"
+description: "How an outside system exchanges laboratory data with LabBook through the FHIR facade of LabBook Connect."
+status: draft
+version: 0.1.0
+fhirVersion: 4.0.1
+copyrightYear: 2026+
+releaseLabel: ci-build
+publisher:
+  name: Fondation Merieux
+
+pages:
+  index.md:
+    title: Home
+  exchange.md:
+    title: The exchange
+
+menu:
+  Home: index.html
+  The exchange: exchange.html
+  Profiles: artifacts.html

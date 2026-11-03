@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Patient xmlns="http://hl7.org/fhir">
+  <id value="LabBookPatientExample"/>
+  <meta>
+    <profile value="http://fhir.labbook-connect/ig/StructureDefinition/labbook-patient"/>
+  </meta>
+  <text>
+    <status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><p class="res-header-id"><b>Generated Narrative: Patient LabBookPatientExample</b></p><a name="LabBookPatientExample"> </a><a name="hcLabBookPatientExample"> </a><div style="display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%"><p style="margin-bottom: 0px"/><p style="margin-bottom: 0px">Profile: <a href="StructureDefinition-labbook-patient.html">LabBook patient</a></p></div><p style="border: 1px #661aff solid; background-color: #e6e6ff; padding: 10px;">Florient TEST (official) Male, DoB: 1996-07-22 ( urn:labbook:patient-code#FBCFU)</p><hr/></div>
+  </text>
+  <identifier>
+    <system value="urn:labbook:patient-code"/>
+    <value value="FBCFU"/>
+  </identifier>
+  <name>
+    <use value="official"/>
+    <family value="TEST"/>
+    <given value="Florient"/>
+  </name>
+  <gender value="male"/>
+  <birthDate value="1996-07-22"/>
+</Patient>

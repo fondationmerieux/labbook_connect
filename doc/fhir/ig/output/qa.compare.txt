@@ -1,0 +1,55 @@
+LabBookConnectIG : Validation Results
+=========================================
+
+err = 0, warn = 12, info = 7, broken links = 0
+$--
+Generated $--. FHIR version $-- for labbook.connect.ig#$-- (canonical = http://fhir.labbook-connect/ig)
+ Build Errors : 0 / 12 / 0
+ /ig/fsh-generated/resources/Bundle-RecordRequestExample : 0 / 0 / 7
+ /ig/fsh-generated/resources/ImplementationGuide-labbook.connect.ig : 0 / 0 / 2
+ /ig/fsh-generated/resources/Patient-LabBookPatientExample : 0 / 1 / 1
+ /ig/fsh-generated/resources/StructureDefinition-labbook-analysis-request : 0 / 0 / 4
+ /ig/fsh-generated/resources/StructureDefinition-labbook-patient : 0 / 0 / 2
+ /ig/fsh-generated/resources/StructureDefinition-labbook-record-task : 0 / 0 / 3
+</table>
+
+== n/a ==
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</a>" expecting "</img>" at line 34 column 177
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</div>" expecting "</body>" at line 79 column 10
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</div>" expecting "</body>" at line 80 column 9
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</div>" expecting "</body>" at line 109 column 8
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</div>" expecting "</body>" at line 111 column 12
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</div>" expecting "</body>" at line 112 column 20
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</div>" expecting "</body>" at line 113 column 16
+WARNING: /ig/output/searchform.html: The html source is not well formed: Found "</div>" expecting "</body>" at line 115 column 12
+WARNING: 1: The HTML fragment 'ip-statements.xhtml' is not included anywhere in the produced implementation guide
+WARNING: 2: An HTML fragment from the set [cross-version-analysis.xhtml, cross-version-analysis-inline.xhtml] is not included anywhere in the produced implementation guide
+WARNING: 3: An HTML fragment from the set [dependency-table.xhtml, dependency-table-short.xhtml, dependency-table-nontech.xhtml] is not included anywhere in the produced implementation guide
+WARNING: 4: The HTML fragment 'globals-table.xhtml' is not included anywhere in the produced implementation guide
+
+
+== fsh-generated/resources/Bundle-RecordRequestExample.json ==
+
+
+== fsh-generated/resources/ImplementationGuide-labbook.connect.ig.json ==
+INFORMATION: Resource: The resource ImplementationGuide/labbook.connect.ig could usefully have an OID assigned (OIDs are easy to assign - see https://build.fhir.org/ig/FHIR/ig-guidance/oids.html)
+
+
+== fsh-generated/resources/Patient-LabBookPatientExample.json ==
+
+
+== fsh-generated/resources/StructureDefinition-labbook-analysis-request.json ==
+INFORMATION: StructureDefinition/labbook-analysis-request: StructureDefinition.snapshot.element[4].binding.extension[0]: The extension http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet|5.4.0 is deprecated with the note: 'Use additionalBinding extension or element instead'
+INFORMATION: Resource: The resource StructureDefinition/labbook-analysis-request could usefully have an OID assigned (OIDs are easy to assign - see https://build.fhir.org/ig/FHIR/ig-guidance/oids.html)
+INFORMATION: StructureDefinition.where(url = 'http://fhir.labbook-connect/ig/StructureDefinition/labbook-analysis-request'): The Implementation Guide contains no explicitly linked examples for this profile
+
+
+== fsh-generated/resources/StructureDefinition-labbook-patient.json ==
+INFORMATION: Resource: The resource StructureDefinition/labbook-patient could usefully have an OID assigned (OIDs are easy to assign - see https://build.fhir.org/ig/FHIR/ig-guidance/oids.html)
+
+
+== fsh-generated/resources/StructureDefinition-labbook-record-task.json ==
+INFORMATION: Resource: The resource StructureDefinition/labbook-record-task could usefully have an OID assigned (OIDs are easy to assign - see https://build.fhir.org/ig/FHIR/ig-guidance/oids.html)
+INFORMATION: StructureDefinition.where(url = 'http://fhir.labbook-connect/ig/StructureDefinition/labbook-record-task'): The Implementation Guide contains no explicitly linked examples for this profile
+
+

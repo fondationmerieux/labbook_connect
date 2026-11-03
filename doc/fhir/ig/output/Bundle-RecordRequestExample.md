@@ -1,0 +1,126 @@
+# Record request, the whole message - LabBook Connect, FHIR Implementation Guide v0.1.0
+
+* [**Table of Contents**](toc.md)
+* [**Artifacts Summary**](artifacts.md)
+* **Record request, the whole message**
+
+## Example Bundle: Record request, the whole message
+
+
+
+## Resource Content
+
+```json
+{
+  "resourceType" : "Bundle",
+  "id" : "RecordRequestExample",
+  "type" : "transaction",
+  "entry" : [{
+    "fullUrl" : "urn:uuid:7e4f1a20-4b9d-4c75-b03e-4f5a6b7c8d94",
+    "resource" : {
+      "resourceType" : "Task",
+      "id" : "RecordRequestTask",
+      "meta" : {
+        "profile" : ["http://fhir.labbook-connect/ig/StructureDefinition/labbook-record-task"]
+      },
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><a name=\"Task_RecordRequestTask\"> </a><p class=\"res-header-id\"><b>Generated Narrative: Task RecordRequestTask</b></p><a name=\"RecordRequestTask\"> </a><a name=\"hcRecordRequestTask\"> </a><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\"/><p style=\"margin-bottom: 0px\">Profile: <a href=\"StructureDefinition-labbook-record-task.html\">Record request</a></p></div><p><b>identifier</b>: <code>http://example.org/openmrs</code>/c26cf3f3-e90f-4237-aa82-df73aaf5a69d</p><p><b>basedOn</b>: <a href=\"Bundle-RecordRequestExample.html#urn-uuid-5c3d0f30-2a8c-4b64-af2d-3e4f5a6b7c83\">ServiceRequest Lipid panel</a></p><p><b>status</b>: Requested</p><p><b>intent</b>: order</p><p><b>for</b>: <a href=\"Bundle-RecordRequestExample.html#urn-uuid-3a1b8b1e-0e6a-4f42-9e0b-1c2d3e4f5a61\">Betty WILLIAMS  Female, DoB: 1974-03-15 ( http://example.org/openmrs#100000Y)</a></p><p><b>authoredOn</b>: 2026-10-27 13:51:03+0000</p></div>"
+      },
+      "identifier" : [{
+        "system" : "http://example.org/openmrs",
+        "value" : "c26cf3f3-e90f-4237-aa82-df73aaf5a69d"
+      }],
+      "basedOn" : [{
+        "reference" : "urn:uuid:5c3d0f30-2a8c-4b64-af2d-3e4f5a6b7c83"
+      }],
+      "status" : "requested",
+      "intent" : "order",
+      "for" : {
+        "reference" : "urn:uuid:3a1b8b1e-0e6a-4f42-9e0b-1c2d3e4f5a61"
+      },
+      "authoredOn" : "2026-10-27T13:51:03+00:00"
+    },
+    "request" : {
+      "method" : "POST",
+      "url" : "Task"
+    }
+  },
+  {
+    "fullUrl" : "urn:uuid:5c3d0f30-2a8c-4b64-af2d-3e4f5a6b7c83",
+    "resource" : {
+      "resourceType" : "ServiceRequest",
+      "id" : "RecordRequestAnalysis",
+      "meta" : {
+        "profile" : ["http://fhir.labbook-connect/ig/StructureDefinition/labbook-analysis-request"]
+      },
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><a name=\"ServiceRequest_RecordRequestAnalysis\"> </a><p class=\"res-header-id\"><b>Generated Narrative: ServiceRequest RecordRequestAnalysis</b></p><a name=\"RecordRequestAnalysis\"> </a><a name=\"hcRecordRequestAnalysis\"> </a><div style=\"display: inline-block; background-color: #d9e0e7; padding: 6px; margin: 4px; border: 1px solid #8da1b4; border-radius: 5px; line-height: 60%\"><p style=\"margin-bottom: 0px\"/><p style=\"margin-bottom: 0px\">Profile: <a href=\"StructureDefinition-labbook-analysis-request.html\">Requested analysis</a></p></div><p><b>status</b>: Active</p><p><b>intent</b>: Order</p><p><b>code</b>: <span title=\"Codes:{http://loinc.org 24331-1}\">Lipid panel</span></p><p><b>subject</b>: <a href=\"Bundle-RecordRequestExample.html#urn-uuid-3a1b8b1e-0e6a-4f42-9e0b-1c2d3e4f5a61\">Betty WILLIAMS  Female, DoB: 1974-03-15 ( http://example.org/openmrs#100000Y)</a></p><p><b>authoredOn</b>: 2026-10-27 13:51:03+0000</p></div>"
+      },
+      "status" : "active",
+      "intent" : "order",
+      "code" : {
+        "coding" : [{
+          "system" : "http://loinc.org",
+          "code" : "24331-1"
+        }],
+        "text" : "Lipid panel"
+      },
+      "subject" : {
+        "reference" : "urn:uuid:3a1b8b1e-0e6a-4f42-9e0b-1c2d3e4f5a61"
+      },
+      "authoredOn" : "2026-10-27T13:51:03+00:00"
+    },
+    "request" : {
+      "method" : "POST",
+      "url" : "ServiceRequest"
+    }
+  },
+  {
+    "fullUrl" : "urn:uuid:3a1b8b1e-0e6a-4f42-9e0b-1c2d3e4f5a61",
+    "resource" : {
+      "resourceType" : "Patient",
+      "id" : "RecordRequestPatient",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><a name=\"Patient_RecordRequestPatient\"> </a><p class=\"res-header-id\"><b>Generated Narrative: Patient RecordRequestPatient</b></p><a name=\"RecordRequestPatient\"> </a><a name=\"hcRecordRequestPatient\"> </a><p style=\"border: 1px #661aff solid; background-color: #e6e6ff; padding: 10px;\">Betty WILLIAMS  Female, DoB: 1974-03-15 ( http://example.org/openmrs#100000Y)</p><hr/></div>"
+      },
+      "identifier" : [{
+        "system" : "http://example.org/openmrs",
+        "value" : "100000Y"
+      }],
+      "name" : [{
+        "family" : "WILLIAMS",
+        "given" : ["Betty"]
+      }],
+      "gender" : "female",
+      "birthDate" : "1974-03-15"
+    },
+    "request" : {
+      "method" : "POST",
+      "url" : "Patient"
+    }
+  },
+  {
+    "fullUrl" : "urn:uuid:9f5a2b31-6c0e-4d86-c14f-5a6b7c8d9ea5",
+    "resource" : {
+      "resourceType" : "Practitioner",
+      "id" : "RecordRequestPractitioner",
+      "text" : {
+        "status" : "generated",
+        "div" : "<div xmlns=\"http://www.w3.org/1999/xhtml\"><a name=\"Practitioner_RecordRequestPractitioner\"> </a><p class=\"res-header-id\"><b>Generated Narrative: Practitioner RecordRequestPractitioner</b></p><a name=\"RecordRequestPractitioner\"> </a><a name=\"hcRecordRequestPractitioner\"> </a><p style=\"border: 1px #661aff solid; background-color: #e6e6ff; padding: 10px;\">Jake DOCTOR</p><hr/></div>"
+      },
+      "name" : [{
+        "family" : "DOCTOR",
+        "given" : ["Jake"]
+      }]
+    },
+    "request" : {
+      "method" : "POST",
+      "url" : "Practitioner"
+    }
+  }]
+}
+
+```

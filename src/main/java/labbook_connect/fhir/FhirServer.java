@@ -43,8 +43,15 @@ public class FhirServer extends RestfulServer {
 		setServerVersion(App.VERSION);
 
 		/** One resource provider per FHIR resource, all sharing the same client */
-		registerProvider(new PatientResourceProvider(client));
+		PatientResourceProvider patient = new PatientResourceProvider(client);
+
+		registerProvider(patient);
 		registerProvider(new RecordTransactionProvider(client));
+		registerProvider(new TaskResourceProvider(client));
+		registerProvider(new DiagnosticReportResourceProvider(client, patient));
+
+		/** Every request received, refused ones included, goes to the log */
+		registerInterceptor(new RequestLogInterceptor());
 
 		/** Readable answers when the facade is called from a browser */
 		registerInterceptor(new ResponseHighlighterInterceptor());
