@@ -30,7 +30,7 @@ public class AnalyzerLoader {
 	private static final String END_POINT_LAB27 = "/services/external/device/analyzer/lab27";
 	private static final String END_POINT_LAB29 = "/services/external/device/analyzer/lab29";
 
-	private List<Analyzer> analyzers = new ArrayList<Analyzer>();
+	private final List<Analyzer> analyzers = new ArrayList<Analyzer>();
 	
 	/**
 	 * Default constructor.
