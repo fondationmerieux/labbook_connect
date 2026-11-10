@@ -39,3 +39,4 @@ logs/
 # alert twice: once for pom.xml, once for the stale copy under
 # target/classes/META-INF/maven/.
 target/
+bin/labbook_connect.jar
