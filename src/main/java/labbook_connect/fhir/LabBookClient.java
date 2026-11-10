@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.moandjiezana.toml.Toml;
 
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
+import labbook_connect.labbook_connect.App;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
@@ -34,8 +35,8 @@ public class LabBookClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(LabBookClient.class);
 
-	/** Facade settings, absent on a site that does not use FHIR */
-	private static final String SETTING_FILE = "/storage/resource/connect/fhir/fhir.toml";
+	/** Connect settings, the facade is not configured on a site that does not use FHIR */
+	private static final String SETTING_FILE = App.SETTING_FILE;
 
 	private static final String TOKEN_ENDPOINT    = "/services/oauth/token";
 	private static final String EXTERNAL_ENDPOINT = "/services/external";
@@ -229,11 +230,19 @@ public class LabBookClient {
 
 		if (jsonBody == null) {
 			builder.GET();
+			logger.info("Calling LabBook, GET {}", path);
 		} else {
 			builder.POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8));
+			logger.info("Calling LabBook, POST {}", path);
+			logger.debug("Calling LabBook, POST {} body {}", path, jsonBody);
 		}
 
-		return send(builder.build(), path);
+		HttpResponse<String> response = send(builder.build(), path);
+
+		logger.info("LabBook answered {} on {}", response.statusCode(), path);
+		logger.debug("LabBook answered {} on {}, body {}", response.statusCode(), path, response.body());
+
+		return response;
 	}
 
 	/**

@@ -113,7 +113,7 @@ The plugin can use the functions provided in the `src/main/java/plugin/Connect_u
 
 Besides the analyzers, LabBook Connect exposes a FHIR R4 facade on `/fhir`, through which an
 outside system such as OpenMRS reads patients and creates records in LabBook. It is inactive
-as long as its setting file is missing, and `doc/fhir/fhir.toml` is the example of that file.
+as long as its setting file is missing, and `doc/connect.toml` is the example of that file.
 
 The LabBook field to FHIR element mapping is in `doc/fhir/mapping.md`, and the Implementation
 Guide, written in FSH, is in `doc/fhir/ig/` with its own

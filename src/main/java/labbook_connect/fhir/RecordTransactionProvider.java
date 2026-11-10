@@ -16,9 +16,11 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.ContactPoint;
 import org.hl7.fhir.r4.model.HumanName;
+import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.ServiceRequest;
 import org.hl7.fhir.r4.model.Task;
@@ -27,6 +29,7 @@ import ca.uhn.fhir.rest.annotation.Transaction;
 import ca.uhn.fhir.rest.annotation.TransactionParam;
 import ca.uhn.fhir.rest.server.exceptions.InternalErrorException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import ca.uhn.fhir.rest.server.exceptions.ResourceVersionConflictException;
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
@@ -50,7 +53,8 @@ public class RecordTransactionProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(RecordTransactionProvider.class);
 
-	private static final String SERVICE_RECORD_DET = "/record/det/0";
+	private static final String SERVICE_RECORD_DET        = "/record/det/0";
+	private static final String SERVICE_ANALYSIS_CANCEL  = "/record/analysis/cancel";
 
 	/** Identifier systems of LabBook itself, never those of the calling system */
 	private static final String SYSTEM_CODE     = "urn:labbook:patient-code";
@@ -84,8 +88,8 @@ public class RecordTransactionProvider {
 		Patient                patient  = null;
 		Practitioner           doctor   = null;
 		Task                   task     = null;
-		List<ServiceRequest>   requests = new ArrayList<>();
-		int                    closed   = 0;
+		List<ServiceRequest>   requests  = new ArrayList<>();
+		List<ServiceRequest>   cancelled = new ArrayList<>();
 
 		for (Bundle.BundleEntryComponent entry : bundle.getEntry()) {
 			Resource resource = entry.getResource();
@@ -105,9 +109,9 @@ public class RecordTransactionProvider {
 				if (found.getStatus() == ServiceRequest.ServiceRequestStatus.ACTIVE) {
 					requests.add(found);
 				} else {
-					closed++;
-					logger.info("ServiceRequest {} ignored, its status is {}", found.getIdElement().getIdPart(),
-							found.getStatus());
+					cancelled.add(found);
+					logger.info("ServiceRequest {} is no longer active, its status is {}",
+							found.getIdElement().getIdPart(), found.getStatus());
 				}
 			}
 		}
@@ -116,8 +120,12 @@ public class RecordTransactionProvider {
 			throw new InvalidRequestException("The Bundle holds no Patient, LabBook cannot create a record without one");
 		}
 
-		if (requests.isEmpty() && closed > 0) {
-			throw new InvalidRequestException("Every ServiceRequest of the Bundle is cancelled or closed, no record is created");
+		/**
+		 * A Bundle holding only cancelled requests is how the calling system cancels what it
+		 * asked for before. It names each analysis by the reference LabBook kept at creation.
+		 */
+		if (requests.isEmpty() && !cancelled.isEmpty()) {
+			return cancelRequests(cancelled);
 		}
 
 		if (requests.isEmpty()) {
@@ -146,6 +154,79 @@ public class RecordTransactionProvider {
 			default  -> throw new InternalErrorException(
 					"LabBook answered HTTP " + answer.status() + " on " + SERVICE_RECORD_DET);
 		};
+	}
+
+	/**
+	 * Cancels in LabBook the analyses the calling system no longer wants. Each one is
+	 * named by the reference LabBook kept at creation, so a record asking the same
+	 * analysis twice is never touched by mistake.
+	 * @param cancelled Requests that came back with a status other than active.
+	 * @return A transaction-response Bundle, one entry per cancelled analysis.
+	 */
+	private Bundle cancelRequests(List<ServiceRequest> cancelled) {
+		Bundle response = new Bundle();
+
+		response.setType(Bundle.BundleType.TRANSACTIONRESPONSE);
+
+		for (ServiceRequest request : cancelled) {
+			String reference = cancelledReference(request);
+
+			if (reference.isEmpty()) {
+				throw new InvalidRequestException(
+						"A cancelled ServiceRequest names no analysis, LabBook cannot tell which one to cancel");
+			}
+
+			JsonObject body = Json.createObjectBuilder()
+					.add("system",   client.externalSystem())
+					.add("analysis", reference)
+					.build();
+
+			LabBookClient.Answer answer = client.postToLabBookWithStatus(SERVICE_ANALYSIS_CANCEL, body.toString());
+
+			switch (answer.status()) {
+				case 200 -> {
+					logger.info("Analysis {} cancelled in LabBook, {}", reference, answer.body());
+
+					response.addEntry().getResponse().setStatus("200 OK");
+				}
+				case 404 -> throw new ResourceNotFoundException(
+						"LabBook knows no analysis with this reference : " + reason(answer.body()));
+				case 409 -> throw new ResourceVersionConflictException(
+						"LabBook keeps this analysis : " + reason(answer.body()));
+				default  -> throw new InternalErrorException(
+						"LabBook answered HTTP " + answer.status() + " on " + SERVICE_ANALYSIS_CANCEL);
+			}
+		}
+
+		return response;
+	}
+
+	/**
+	 * Returns the reference of the analysis a cancellation is about.
+	 *
+	 * A cancellation is a resource of its own, with its own id, and it names the
+	 * request it puts an end to in its replaces field. That one is the reference
+	 * LabBook kept at creation. The id of the cancellation itself means nothing
+	 * to LabBook, so it is only used when no replaces came along.
+	 * @param request Cancelled request as it was received.
+	 * @return The reference LabBook knows, empty when none can be found.
+	 */
+	private String cancelledReference(ServiceRequest request) {
+		for (Reference replaced : request.getReplaces()) {
+			if (replaced.hasReference()) {
+				String reference = new IdType(replaced.getReference()).getIdPart();
+
+				if (reference != null && !reference.isEmpty()) {
+					return reference;
+				}
+			}
+		}
+
+		if (request.getIdElement() != null && request.getIdElement().getIdPart() != null) {
+			return request.getIdElement().getIdPart();
+		}
+
+		return "";
 	}
 
 	/**
@@ -414,12 +495,25 @@ public class RecordTransactionProvider {
 				}
 			}
 
+			/**
+			 * Reference of the request in the calling system, kept by LabBook so that a
+			 * later message naming this analysis, a cancellation for instance, finds it
+			 * again. It is unique per request, two records asking the same analysis do
+			 * not share it.
+			 */
+			String reference = "";
+
+			if (request.getIdElement() != null && request.getIdElement().getIdPart() != null) {
+				reference = request.getIdElement().getIdPart();
+			}
+
 			list.add(Json.createObjectBuilder()
-					.add("ana_code",  code)
-					.add("ana_loinc", loinc)
-					.add("ana_emer",  urgent)
-					.add("ana_req",   "Y")
-					.add("ana_out",   "N"));
+					.add("ana_code",    code)
+					.add("ana_loinc",   loinc)
+					.add("ana_emer",    urgent)
+					.add("ana_req",     "Y")
+					.add("ana_out",     "N")
+					.add("ana_ref_ext", reference));
 		}
 
 		return list;

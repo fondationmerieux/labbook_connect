@@ -17,7 +17,7 @@
   fhir:StructureDefinition.name [ fhir:value "LabBookPatient"] ;
   fhir:StructureDefinition.title [ fhir:value "LabBook patient"] ;
   fhir:StructureDefinition.status [ fhir:value "draft"] ;
-  fhir:StructureDefinition.date [ fhir:value "2026-10-28T08:35:15+00:00"^^xsd:dateTime] ;
+  fhir:StructureDefinition.date [ fhir:value "2026-11-09T08:36:26+00:00"^^xsd:dateTime] ;
   fhir:StructureDefinition.publisher [ fhir:value "Fondation Merieux"] ;
   fhir:StructureDefinition.description [ fhir:value "Patient as the FHIR facade of LabBook Connect publishes it, built from the LabBook external API."] ;
   fhir:StructureDefinition.fhirVersion [ fhir:value "4.0.1"] ;

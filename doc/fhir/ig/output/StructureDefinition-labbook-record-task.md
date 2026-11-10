@@ -9,7 +9,7 @@
 | | |
 | :--- | :--- |
 | *Official URL*:http://fhir.labbook-connect/ig/StructureDefinition/labbook-record-task | *Version*:0.1.0 |
-| Draft as of 2026-10-28 | *Computable Name*:LabBookRecordTask |
+| Draft as of 2026-11-09 | *Computable Name*:LabBookRecordTask |
 
  
 The work order an outside system sends to ask LabBook for a new record. It carries the reference LabBook keeps to recognise the request, and points to the requested analyses. 
@@ -41,7 +41,7 @@ Other representations of profile: [CSV](StructureDefinition-labbook-record-task.
   "name" : "LabBookRecordTask",
   "title" : "Record request",
   "status" : "draft",
-  "date" : "2026-10-28T08:35:15+00:00",
+  "date" : "2026-11-09T08:36:26+00:00",
   "publisher" : "Fondation Merieux",
   "description" : "The work order an outside system sends to ask LabBook for a new record. It carries the reference LabBook keeps to recognise the request, and points to the requested analyses.",
   "fhirVersion" : "4.0.1",

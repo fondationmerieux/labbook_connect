@@ -9,7 +9,7 @@
 | | |
 | :--- | :--- |
 | *Official URL*:http://fhir.labbook-connect/ig/StructureDefinition/labbook-analysis-request | *Version*:0.1.0 |
-| Draft as of 2026-10-28 | *Computable Name*:LabBookAnalysisRequest |
+| Draft as of 2026-11-09 | *Computable Name*:LabBookAnalysisRequest |
 
  
 One requested analysis. The laboratory recognises it by its LOINC code, so that code has to be there. 
@@ -41,7 +41,7 @@ Other representations of profile: [CSV](StructureDefinition-labbook-analysis-req
   "name" : "LabBookAnalysisRequest",
   "title" : "Requested analysis",
   "status" : "draft",
-  "date" : "2026-10-28T08:35:15+00:00",
+  "date" : "2026-11-09T08:36:26+00:00",
   "publisher" : "Fondation Merieux",
   "description" : "One requested analysis. The laboratory recognises it by its LOINC code, so that code has to be there.",
   "fhirVersion" : "4.0.1",

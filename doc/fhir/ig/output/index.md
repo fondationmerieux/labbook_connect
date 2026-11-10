@@ -8,7 +8,7 @@
 | | |
 | :--- | :--- |
 | *Official URL*:http://fhir.labbook-connect/ig/ImplementationGuide/labbook.connect.ig | *Version*:0.1.0 |
-| Draft as of 2026-10-28 | *Computable Name*:LabBookConnectIG |
+| Draft as of 2026-11-09 | *Computable Name*:LabBookConnectIG |
 
 This guide describes the FHIR exchange between an outside system, such as OpenMRS, and the LabBook laboratory information system.
 
@@ -39,7 +39,7 @@ The mapping of every LabBook field to its FHIR element is kept beside this guide
   "name" : "LabBookConnectIG",
   "title" : "LabBook Connect, FHIR Implementation Guide",
   "status" : "draft",
-  "date" : "2026-10-28T08:35:15+00:00",
+  "date" : "2026-11-09T08:36:26+00:00",
   "publisher" : "Fondation Merieux",
   "description" : "How an outside system exchanges laboratory data with LabBook through the FHIR facade of LabBook Connect.",
   "packageId" : "labbook.connect.ig",

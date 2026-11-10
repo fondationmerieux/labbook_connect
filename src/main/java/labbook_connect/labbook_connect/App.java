@@ -14,6 +14,9 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moandjiezana.toml.Toml;
+
+import ch.qos.logback.classic.Level;
 import labbook_connect.fhir.FhirServer;
 import labbook_connect.fhir.LabBookClient;
 import plugin.Analyzer;
@@ -29,6 +32,16 @@ public class App {
 	public static final String VERSION  = "1.1.0";
 	/** Numeric application version (used for comparisons). */
 	public static final int NUM_VERSION = 10100;
+
+	/** Connect settings, optional: without it the log level is info and the FHIR facade is not configured */
+	public static final String SETTING_FILE = "/storage/resource/connect/connect.toml";
+
+	/** Directory holding the settings of the analyzers, their plugins and their messages */
+	public static final String STORAGE_ROOT = "/storage/resource/connect";
+
+	/** Default LabBook services, used when the settings file says nothing */
+	private static final String ENDPOINT_LAB27 = "/services/external/device/analyzer/lab27";
+	private static final String ENDPOINT_LAB29 = "/services/external/device/analyzer/lab29";
 	
 	/** Loaded analyzer plugin classes available in the runtime (from plugin JARs). */
 	public static List<Analyzer> analyzers_classes = new ArrayList<Analyzer>();
@@ -53,6 +66,8 @@ public class App {
 		logger.info("*** {} BEGIN App main version: {} ***", currentTimestamp, App.VERSION);
 		
 		createRequiredDirectories();
+
+		setLogLevel();
 		
 		AnalyzerLoader analyzerLoader = new AnalyzerLoader();
     	
@@ -108,15 +123,90 @@ public class App {
 	}
 	
 	/**
+	 * Returns the LabBook URL of the settings file, empty when the file or the
+	 * setting is missing. The analyzers fall back on their own url_lis then, which
+	 * is how every laboratory worked before this file existed.
+	 * @return The URL without its trailing slash, empty when none is set.
+	 */
+	public static String labBookUrl() {
+		return setting("labbook.url", "");
+	}
+
+	/**
+	 * Returns a setting of the file, the given default when the file or the setting
+	 * is missing, trailing slashes removed.
+	 * @param key Key of the setting, log.level for instance.
+	 * @param byDefault Value to return when the setting is not set.
+	 * @return The setting, or byDefault.
+	 */
+	private static String setting(String key, String byDefault) {
+		File file = new File(SETTING_FILE);
+
+		if (!file.exists()) {
+			return byDefault;
+		}
+
+		String value = new Toml().read(file).getString(key, byDefault);
+
+		if (value == null || value.trim().isEmpty()) {
+			return byDefault;
+		}
+
+		value = value.trim();
+
+		while (value.endsWith("/")) {
+			value = value.substring(0, value.length() - 1);
+		}
+
+		return value;
+	}
+
+	/**
+	 * Returns the LabBook service the analyzers of the LAB27 protocol answer to.
+	 * @return Path of the service under the LabBook URL.
+	 */
+	public static String endpointLab27() {
+		return setting("labbook.endpoint_lab27", ENDPOINT_LAB27);
+	}
+
+	/**
+	 * Returns the LabBook service the analyzers of the LAB29 protocol answer to.
+	 * @return Path of the service under the LabBook URL.
+	 */
+	public static String endpointLab29() {
+		return setting("labbook.endpoint_lab29", ENDPOINT_LAB29);
+	}
+
+	/**
+	 * Applies the log level of the settings file, info when the file or the setting is missing.
+	 */
+	private static void setLogLevel() {
+		String level = "info";
+		File file = new File(SETTING_FILE);
+
+		if (file.exists()) {
+			level = new Toml().read(file).getString("log.level", "info");
+		}
+
+		ch.qos.logback.classic.Logger root =
+				(ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+		root.setLevel(Level.toLevel(level, Level.INFO));
+
+		logger.info("Log level {}", root.getLevel());
+	}
+
+	/**
 	 * Ensure required directories exist.
 	 */
 	private static void createRequiredDirectories() {
+	    String root = STORAGE_ROOT;
+
 	    String[] directories = {
-	        "/storage/resource/connect",
-	        "/storage/resource/connect/analyzer",
-	        "/storage/resource/connect/analyzer/mapping",
-	        "/storage/resource/connect/analyzer/plugin",
-	        "/storage/resource/connect/analyzer/setting"
+	        root,
+	        root + "/analyzer",
+	        root + "/analyzer/mapping",
+	        root + "/analyzer/plugin",
+	        root + "/analyzer/setting"
 	    };
 
 	    for (String dirPath : directories) {

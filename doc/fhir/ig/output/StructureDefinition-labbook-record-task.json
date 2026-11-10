@@ -10,7 +10,7 @@
   "name" : "LabBookRecordTask",
   "title" : "Record request",
   "status" : "draft",
-  "date" : "2026-10-28T08:35:15+00:00",
+  "date" : "2026-11-09T08:36:26+00:00",
   "publisher" : "Fondation Merieux",
   "description" : "The work order an outside system sends to ask LabBook for a new record. It carries the reference LabBook keeps to recognise the request, and points to the requested analyses.",
   "fhirVersion" : "4.0.1",

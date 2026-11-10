@@ -27,7 +27,7 @@
   <name value="LabBookPatient"/>
   <title value="LabBook patient"/>
   <status value="draft"/>
-  <date value="2026-10-28T08:35:15+00:00"/>
+  <date value="2026-11-09T08:36:26+00:00"/>
   <publisher value="Fondation Merieux"/>
   <description value="Patient as the FHIR facade of LabBook Connect publishes it, built from the LabBook external API."/>
   <fhirVersion value="4.0.1"/>

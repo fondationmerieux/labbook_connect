@@ -11,7 +11,7 @@
   <name value="LabBookConnectIG"/>
   <title value="LabBook Connect, FHIR Implementation Guide"/>
   <status value="draft"/>
-  <date value="2026-10-28T08:35:15+00:00"/>
+  <date value="2026-11-09T08:36:26+00:00"/>
   <publisher value="Fondation Merieux"/>
   <description value="How an outside system exchanges laboratory data with LabBook through the FHIR facade of LabBook Connect."/>
   <packageId value="labbook.connect.ig"/>

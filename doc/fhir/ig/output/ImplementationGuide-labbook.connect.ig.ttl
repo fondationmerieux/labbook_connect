@@ -17,7 +17,7 @@
   fhir:ImplementationGuide.name [ fhir:value "LabBookConnectIG"] ;
   fhir:ImplementationGuide.title [ fhir:value "LabBook Connect, FHIR Implementation Guide"] ;
   fhir:ImplementationGuide.status [ fhir:value "draft"] ;
-  fhir:ImplementationGuide.date [ fhir:value "2026-10-28T08:35:15+00:00"^^xsd:dateTime] ;
+  fhir:ImplementationGuide.date [ fhir:value "2026-11-09T08:36:26+00:00"^^xsd:dateTime] ;
   fhir:ImplementationGuide.publisher [ fhir:value "Fondation Merieux"] ;
   fhir:ImplementationGuide.description [ fhir:value "How an outside system exchanges laboratory data with LabBook through the FHIR facade of LabBook Connect."] ;
   fhir:ImplementationGuide.packageId [ fhir:value "labbook.connect.ig"] ;

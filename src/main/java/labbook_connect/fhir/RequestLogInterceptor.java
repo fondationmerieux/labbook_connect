@@ -59,6 +59,28 @@ public class RequestLogInterceptor {
 	}
 
 	/**
+	 * Logs the body of the request, whatever it holds, so that what was received
+	 * can be read back as it came.
+	 * @param details Request about to be handled.
+	 */
+	@Hook(Pointcut.SERVER_INCOMING_REQUEST_PRE_HANDLED)
+	public void body(ServletRequestDetails details) {
+		/** Patient data, written only when the log level is debug */
+		if (details == null || details.getServletRequest() == null || !logger.isDebugEnabled()) {
+			return;
+		}
+
+		byte[] contents = details.loadRequestContents();
+
+		if (contents == null || contents.length == 0) {
+			return;
+		}
+
+		logger.debug("Request {} body {}", requestId(details.getServletRequest()),
+				new String(contents, StandardCharsets.UTF_8));
+	}
+
+	/**
 	 * Logs the answer, with its status and how long it took. This point is reached
 	 * whether the request succeeded or was refused.
 	 * @param details Request being answered, as the servlet saw it.

@@ -9,7 +9,7 @@
 | | |
 | :--- | :--- |
 | *Official URL*:http://fhir.labbook-connect/ig/StructureDefinition/labbook-patient | *Version*:0.1.0 |
-| Draft as of 2026-10-28 | *Computable Name*:LabBookPatient |
+| Draft as of 2026-11-09 | *Computable Name*:LabBookPatient |
 
  
 Patient as the FHIR facade of LabBook Connect publishes it, built from the LabBook external API. 
@@ -41,7 +41,7 @@ Other representations of profile: [CSV](StructureDefinition-labbook-patient.csv)
   "name" : "LabBookPatient",
   "title" : "LabBook patient",
   "status" : "draft",
-  "date" : "2026-10-28T08:35:15+00:00",
+  "date" : "2026-11-09T08:36:26+00:00",
   "publisher" : "Fondation Merieux",
   "description" : "Patient as the FHIR facade of LabBook Connect publishes it, built from the LabBook external API.",
   "fhirVersion" : "4.0.1",

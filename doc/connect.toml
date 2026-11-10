@@ -1,0 +1,26 @@
+# LabBook Connect settings.
+# Sample file, copy it to /storage/resource/connect/connect.toml and set the real values.
+# Read when Connect starts. Without it, logs stay at info and the FHIR facade is off.
+# It holds a secret, keep it readable by its owner only (chmod 600).
+
+version = "1.0.0"  # Version of this file
+
+[log]
+# info, or debug to log the messages too, patient data included
+level         = "info"
+
+[labbook]
+# Address of LabBook, seen from the container. Used by the FHIR facade and by the analyzers.
+url           = "http://localhost/sigl"
+client_id     = "CLIENT_ID_TO_ENTER"        # OAuth2 client declared in LabBook
+client_secret = "CLIENT_SECRET_TO_ENTER"    # Its secret
+
+# Services the analyzers write to. Change only if LabBook moved them.
+endpoint_lab27 = "/services/external/device/analyzer/lab27"
+endpoint_lab29 = "/services/external/device/analyzer/lab29"
+
+[external]
+# Short name of the software sending the requests, kept by LabBook.
+# Left empty, LabBook keeps the long URL that software sends.
+# Changing it later breaks the link with the records already received.
+system_name   = "OPENMRS"

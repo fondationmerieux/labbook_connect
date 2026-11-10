@@ -253,7 +253,7 @@ public class TaskResourceProvider implements IResourceProvider {
 			String record = jsonField(row, "rec_id");
 
 			for (JsonObject analysis : jsonArray(row, "ana_list")) {
-				String id = record + "-" + jsonField(analysis, "ana_req");
+				String id = record + "-" + jsonField(analysis, "ana_id");
 
 				task.addOutput()
 						.setType(new org.hl7.fhir.r4.model.CodeableConcept().setText("Report"))

@@ -27,8 +27,6 @@ public class AnalyzerLoader {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AnalyzerLoader.class);
 	
-	private static final String END_POINT_LAB27 = "/services/external/device/analyzer/lab27";
-	private static final String END_POINT_LAB29 = "/services/external/device/analyzer/lab29";
 
 	private final List<Analyzer> analyzers = new ArrayList<Analyzer>();
 	
@@ -44,7 +42,7 @@ public class AnalyzerLoader {
 	 * @return List of instantiated analyzer plugin classes.
 	 */
 	public List<Analyzer> loadAnalyzerClasses() {
-		String directoryPath = "/storage/resource/connect/analyzer/plugin";
+		String directoryPath = App.STORAGE_ROOT + "/analyzer/plugin";
 		
 		logger.info("DEBUG: Checking for analyzer JARs in {}", directoryPath);
 
@@ -139,7 +137,7 @@ public class AnalyzerLoader {
 		}
 
 		// LOAD analyzers settings and set corresponding analyzers_loaded
-		String settingPath = "/storage/resource/connect/analyzer/setting";
+		String settingPath = App.STORAGE_ROOT + "/analyzer/setting";
 
 		Path directory = Paths.get(settingPath);
 
@@ -180,7 +178,16 @@ public class AnalyzerLoader {
 		String id_analyzer = setting.getString("analyzer.id") ;
 		String plugin_name = setting.getString("analyzer.plugin") ;
 		String mappingPath = setting.getString("analyzer.mapping", "");
-		String url_lis     = setting.getString("analyzer.url_lis") ;
+		/**
+		 * One place for the LabBook URL, connect.toml, and the url_lis of the analyzer
+		 * as a fallback so that a laboratory without that file keeps working.
+		 */
+		String url_lis     = App.labBookUrl();
+
+		if (url_lis.isEmpty()) {
+			url_lis = setting.getString("analyzer.url_lis") ;
+		}
+
 		String type_cnx    = setting.getString("analyzer.type_cnx") ;
 		String type_msg    = setting.getString("analyzer.type_msg") ;
 		String archive_msg = setting.getString("analyzer.archive_msg") ;
@@ -243,8 +250,8 @@ public class AnalyzerLoader {
 							
 							existingAnalyzer.setVersion(version);
 							existingAnalyzer.setMappingPath(mappingPath);
-							existingAnalyzer.setUrl_upstream_lab27(url_lis + END_POINT_LAB27 + "/" + id_analyzer);
-							existingAnalyzer.setUrl_upstream_lab29(url_lis + END_POINT_LAB29 + "/" + id_analyzer);
+							existingAnalyzer.setUrl_upstream_lab27(url_lis + App.endpointLab27() + "/" + id_analyzer);
+							existingAnalyzer.setUrl_upstream_lab29(url_lis + App.endpointLab29() + "/" + id_analyzer);
 							existingAnalyzer.setType_cnx(type_cnx);
 							existingAnalyzer.setType_msg(type_msg);
 							existingAnalyzer.setArchive_msg(archive_msg);
@@ -267,8 +274,8 @@ public class AnalyzerLoader {
 							logger.info("DEBUG: Set version={} for analyzer {}", version, id_analyzer);
 							newAnalyzer.setId_analyzer(id_analyzer);
 							newAnalyzer.setMappingPath(mappingPath);
-							newAnalyzer.setUrl_upstream_lab27(url_lis + END_POINT_LAB27 + "/" + id_analyzer);
-							newAnalyzer.setUrl_upstream_lab29(url_lis + END_POINT_LAB29 + "/" + id_analyzer);
+							newAnalyzer.setUrl_upstream_lab27(url_lis + App.endpointLab27() + "/" + id_analyzer);
+							newAnalyzer.setUrl_upstream_lab29(url_lis + App.endpointLab29() + "/" + id_analyzer);
 							newAnalyzer.setType_cnx(type_cnx);
 							newAnalyzer.setType_msg(type_msg);
 							newAnalyzer.setArchive_msg(archive_msg);
@@ -300,7 +307,7 @@ public class AnalyzerLoader {
 	 * Creates runtime directories for a specific analyzer instance.
 	 */
 	private static void createAnalyzerDirectories(String id_analyzer) {
-	    Path dir_analyzer = Paths.get("/storage/resource/connect/analyzer/" + id_analyzer);
+	    Path dir_analyzer = Paths.get(App.STORAGE_ROOT + "/analyzer/" + id_analyzer);
 	    Path dir_mapping = Paths.get(dir_analyzer + "/mapping");
 	    Path dir_lab27 = Paths.get(dir_analyzer + "/lab27");
 	    Path dir_lab29 = Paths.get(dir_analyzer + "/lab29");
